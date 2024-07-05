@@ -1,4 +1,4 @@
-package org.parcialfinal_poo;
+package org.parcialfinal_poo.gui.viewers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

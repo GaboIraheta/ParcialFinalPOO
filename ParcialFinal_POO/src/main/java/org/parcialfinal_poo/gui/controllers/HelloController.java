@@ -1,4 +1,4 @@
-package org.parcialfinal_poo;
+package org.parcialfinal_poo.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
