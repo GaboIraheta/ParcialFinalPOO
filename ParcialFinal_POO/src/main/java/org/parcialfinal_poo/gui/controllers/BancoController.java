@@ -3,7 +3,7 @@ package org.parcialfinal_poo.gui.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class BancoController {
     @FXML
     private Label welcomeText;
 
