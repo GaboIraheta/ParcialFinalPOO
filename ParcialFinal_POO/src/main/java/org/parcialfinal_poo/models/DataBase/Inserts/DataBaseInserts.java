@@ -25,8 +25,11 @@ public abstract class DataBaseInserts extends DataBase {
     }
 
     public abstract void registrarCliente(String nombres, String apellidos, String direccion, String numTelefono);
+    //00021223 metodo abstracto para insertar datos en la tabla Cliente
 
-    public abstract void registrarTarjeta(int clienteID, String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitadorID);
+    public abstract void registrarTarjeta(int clienteID, String numTarjeta, Date fechaExp, TipoTarjeta tipo, int facilitadorID);
+    //00021223 metodo abstracto para insertar datos en la tabla Tarjeta
 
     public abstract void registrarCompra(Date fechaCompra, double monto, String descripcion, int tarjetaID);
+    //00021223 metodo abstracto para insertar datos en la tabla Compra
 }

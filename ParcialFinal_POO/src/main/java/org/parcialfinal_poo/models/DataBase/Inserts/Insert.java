@@ -24,7 +24,7 @@ public class Insert extends DataBaseInserts {
 
     @Override
     public void registrarCliente(String nombres, String apellidos, String direccion, String numTelefono) {
-        //00021223 metodo que se encarga de registrar a un cliente en la base de datos, recibe todos los campos necesarios
+        //00021223 se define metodo abstracto que se encarga de registrar a un cliente en la base de datos, recibe todos los campos necesarios
         //que debe guardar la tabla de Cliente en la bbdd
 
         try { //00021223 se realiza el control de excepciones requerido para consultas a bases de datos
@@ -57,8 +57,8 @@ public class Insert extends DataBaseInserts {
 
     @Override
     public void registrarTarjeta(int clienteID, String numTarjeta, Date fechaExp,
-                                 TipoTarjeta tipo, Facilitador facilitador) {
-        //00021223 metodo pare registrar una tarjeta en la base de datos, recibe todos los campos necesarios que
+                                 TipoTarjeta tipo, int facilitadorID) {
+        //00021223 se define metodo abstracto pare registrar una tarjeta en la base de datos, recibe todos los campos necesarios que
         //debe guardar la tabla Tarjeta en la bbdd
 
         try { //00021223 control de excepciones requerido para realizar consultas a bbdd
@@ -72,7 +72,8 @@ public class Insert extends DataBaseInserts {
             preparedStatement.setString(2, numTarjeta); //00021223 segundo valor (numero de la tarjeta)
             preparedStatement.setDate(3, fechaExp); //00021223 tercer valor (fecha de expiracion)
             preparedStatement.setString(4, String.valueOf(tipo)); //00021223 cuarto valor (tipo de tarjeta: credito o debito)
-            preparedStatement.setString(5, facilitador.toString()); //00021223 quinto valor (facilitador de la tarjeta)
+           //todo para el facilitador se debe pasar un entero, hay que cambiar la logica de como se manda el ID del facilitador
+            preparedStatement.setInt(5, facilitadorID); //00021223 quinto valor (ID del facilitador al que esta asociada la tarjeta)
 
             int affectedRows = preparedStatement.executeUpdate(); //00021223 se ejecuta la consulta y se almacena en una variable de tipo entero
 
@@ -90,7 +91,7 @@ public class Insert extends DataBaseInserts {
 
     @Override
     public void registrarCompra(Date fechaCompra, double monto, String descripcion, int tarjetaID) {
-        //00021223 metodo para registrar una compra en la base de datos, recibe todos los campos necesarios
+        //00021223 se define metodo abstracto para registrar una compra en la base de datos, recibe todos los campos necesarios
         //que debe guardar la tabla Compra en la bbdd
 
         try { //00021223 control de excepciones requerido para realizar consultas a bbdd
