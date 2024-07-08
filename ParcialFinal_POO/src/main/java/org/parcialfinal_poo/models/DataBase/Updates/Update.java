@@ -56,7 +56,7 @@ public class Update extends DataBaseUpdate {
     }
 
     @Override
-    public void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, int facilitadorID, int id) {
+    public void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int id) {
         //00021223 se define metodo abstracto para ejecutar la consulta para actualizar registros en la tabla tarjeta en la bbdd
         //recibe los campos que se requieren actualizar en un registro y el ID del registro que se desea actualizar
 
@@ -70,7 +70,15 @@ public class Update extends DataBaseUpdate {
             preparedStatement.setString(1, numTarjeta); //00021223 se manda el primer valor (nuevo numero de tarjeta)
             preparedStatement.setDate(2, fechaExp); //00021223 segundo valor (nueva fecha de expiracion de la tarjeta)
             preparedStatement.setString(3, String.valueOf(tipo)); //00021223 tercer valor (nuevo tipo de tarjeta)
-            preparedStatement.setInt(4, facilitadorID); //00021223 cuarto valor (nuevo ID de facilitador)
+
+            if(facilitador == Facilitador.Visa) { //00021223 se verifica si el facilitador es Visa para mandarle facilitadorID = 1
+                preparedStatement.setInt(4, 1); //00021223 cuarto valor (nuevo ID de facilitador)
+            } else if(facilitador == Facilitador.MasterCard) { //00021223 se verifica si el facilitador es MasterCard para mandarle facilitadorID = 2
+                preparedStatement.setInt(4, 2); //00021223 cuarto valor (nuevo ID de facilitador)
+            } else if(facilitador == Facilitador.AmericanExpress) { //00021223 se verifica si el facilitador es AmericanExpress para mandarle facilitadorID = 3
+                preparedStatement.setInt(4, 3); //00021223 cuarto valor (nuevo ID de facilitador)
+            }
+
             preparedStatement.setInt(5, id); //00021223 ID de la tarjeta de la cual se quiere actualizar sus datos
 
             int affectedRows = preparedStatement.executeUpdate(); //00021223 se ejecuta la query y se guarda el valor de retorno

@@ -25,7 +25,7 @@ public abstract class DataBaseUpdate extends DataBase {
     public abstract void updateCliente(String nombres, String apelllidos, String direccion, String numTelefono, int id);
     //00021223 metodo abstracto para actualizar datos de la tabla Cliente
 
-    public abstract void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, int facilitadorID, int id);
+    public abstract void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int id);
     //00021223 metodo abstracto para actualizar datos en la tabla Tarjeta
 
     public abstract void updateCompra(Date fechaCompra, double monto, String descripcion, int tarjetaID, int id);

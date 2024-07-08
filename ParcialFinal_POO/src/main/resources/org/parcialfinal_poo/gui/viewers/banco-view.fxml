@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="730.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab closable="false" text="Registro">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TabPane layoutX="28.0" layoutY="29.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+                    <tabs>
+                      <Tab closable="false" text="Leer registro" />
+                      <Tab closable="false" text="Agregar registro" />
+                        <Tab closable="false" text="Actualizar registro">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                        <Tab closable="false" text="Eliminar registro">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+                  <ComboBox layoutX="110.0" layoutY="8.0" prefHeight="25.0" prefWidth="165.0" promptText="Seleccione una opción" />
+                  <Label layoutX="14.0" layoutY="12.0" text="Tabla a consultar:" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab closable="false" text="Reportes">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <VBox layoutX="-1.0" layoutY="5.0" prefHeight="499.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <Label text="Seleccione el reporte:" />
+                        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                          <tabs>
+                            <Tab closable="false" text="Reporte A">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TextField layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
+                                          <Label layoutX="93.0" layoutY="14.0" text="Compras del cliente" />
+                                          <DatePicker layoutX="14.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="10.0" layoutY="118.0" text="Fecha inicial" />
+                                          <DatePicker layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="10.0" layoutY="184.0" text="Fecha final" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                            <Tab closable="false" text="Reporte B">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TextField layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
+                                          <Label layoutX="98.0" layoutY="14.0" text="Gastos del cliente" />
+                                          <Label layoutX="10.0" layoutY="118.0" text="Fecha inicial" />
+                                          <Label layoutX="10.0" layoutY="184.0" text="Fecha final" />
+                                          <Spinner layoutX="10.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Spinner layoutX="14.0" layoutY="201.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="Reporte C">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <TextField layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
+                                          <Label layoutX="96.0" layoutY="14.0" text="Tarjetas del cliente" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="Reporte D">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <Label layoutX="10.0" layoutY="54.0" text="Facilitador" AnchorPane.leftAnchor="10.0" />
+                                          <Label layoutX="85.0" layoutY="14.0" text="Clientes por facilitador" />
+                                          <ComboBox layoutX="10.0" layoutY="71.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                          </tabs>
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TabPane>
+                        <HBox alignment="CENTER" spacing="50.0">
+                           <children>
+                              <Button alignment="BASELINE_CENTER" mnemonicParsing="false" prefWidth="105.0" text="Consultar" />
+                              <Button mnemonicParsing="false" prefWidth="105.0" text="Generar reporte" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <TextArea layoutX="434.0" layoutY="20.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
