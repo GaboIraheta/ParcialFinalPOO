@@ -2,9 +2,7 @@ package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
 import org.parcialfinal_poo.models.Banco.Compra;
 
-import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Queries extends DataBaseQueries {
@@ -64,7 +62,37 @@ public class Queries extends DataBaseQueries {
 
     @Override
     public double generarReporteB(int clienteID, Date fecha) {
-        return 0;
+        //00022423 se define metodo abstracto que se encarga de realizar la consulta a la base de datos para generar reporte A
+
+
+        double total = 0;//00022423 se declara una variable llamada total y se inicializa en 0, esta almacenará el total gastado
+
+        try {
+
+            connection = getConnection(); //00022423 se establece la conexion a la base de datos a través del método getconnection()
+
+            // 00022423 Se prepara una declaración SQL utilizando una consulta obtenida del método getReportQuery(2) de la clase DataBaseQueries.
+            PreparedStatement prepareStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(2));
+            //00022423 Se establece el primer parámetro de la consulta preparada como el ID del cliente (clienteID).
+            prepareStatement.setInt(1,clienteID);
+            // 00022423 Se establece el segundo parámetro de la consulta preparada como el año de la fecha proporcionada.
+            prepareStatement.setInt(2,fecha.toLocalDate().getYear());
+            //00022423 Se establece el tercer parámetro de la consulta preparada como el mes de la fecha proporcionada.
+            prepareStatement.setInt(3,fecha.toLocalDate().getMonthValue());
+            // 00022423 Se ejecuta la consulta y se obtiene el resultado en un objeto ResultSet.
+            ResultSet rs = prepareStatement.executeQuery();
+
+            if (rs.next()){
+                //// 00022423 Si hay un resultado, se obtiene el valor de la primera columna y se asigna a la variable total.
+                total = rs.getDouble(1);
+            }
+
+        }catch (SQLException e){
+            // 00022423 En caso de que ocurra una excepción SQL, se imprime el mensaje de error.
+            System.out.println(e.getMessage());
+        }
+        //00022423 Se retorna el valor total obtenido en la consulta
+        return total;
     }
 
     @Override
