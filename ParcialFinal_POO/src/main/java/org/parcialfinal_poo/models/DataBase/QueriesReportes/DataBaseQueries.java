@@ -18,7 +18,7 @@ public abstract class DataBaseQueries extends DataBase {
         } else if(query == 2) { //00021223 se verifica si la query requerida es para el reporte B
             return """
                     select sum(c.monto) from Compra c inner join Tarjeta t on t.id = c.tarjetaID
-                    inner join Cliente on t.clienteID = ?\s
+                    inner join Cliente on t.clienteID = Cliente.?\s
                     where year(c.fechaCompra) = year(?) and month(c.fechaCompra) = month(?)"""; //00021223 retorna la query para consultar un reporte B
         } else if(query == 3) { //00021223 se verifica si la query requerida es para el reporte C
             return "select numTarjeta from Tarjeta \n" +
