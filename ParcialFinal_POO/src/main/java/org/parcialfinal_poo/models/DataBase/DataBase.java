@@ -1,35 +1,38 @@
 package org.parcialfinal_poo.models.DataBase;
 
+import javafx.scene.control.Alert;
+
 import java.sql.*;
 
-public class DataBase { //00021223 clase para manejar todos los aspectos de consultas a la bbdd
+public abstract class DataBase implements ConnectionInterface { //00021223 clase para manejar todos los aspectos de consultas a la bbdd
 
-    private static DataBase instance; //00021223 instancia unica de la clase (implementacion de Singleton)
+    protected Alert alerta; //00021223 variable para almacenar el tipo de alerta y ejecutar una alerta
 
-    private DataBase() { //00021223 constructor privado de la clase para que solo pueda ser instanciada por ella misma
+    private static final String url = "jdbc:mysql://localhost:3306/dbBCN";
+    private static final String user = "gabo7";
+    private static final String password = "Afb092ebbf$";
 
-    }
+    protected static Connection connection; //00021223 campo para almacenar la conexion a la base de datos
 
-    public static DataBase getInstance() { //00021223 metodo para obtener la instancia unica de la clase
-        if (instance == null) { //00021223 se verifica que la instancia no sea nula
-            instance = new DataBase(); //00021223 si la instancia es nula entonces crea el unico objeto que existira de la clase
-        }
+    protected static PreparedStatement preparedStatement; //00021223 campo para preparar y ejecutar cada consulta requerida
 
-        return instance; //00021223 retorna la instancia unica de la clase
-    }
+    protected static ResultSet resultSet; //00021223 campo para almacenar los resultados de las consultas que lo requieran
 
-    private static final String url = "ruta que utilizara cada una en su pc";
-    private static final String user = "su usario";
-    private static final String password = "su contraseña";
-
-    private static Connection connection; //00021223 campo para almacenar la conexion a la base de datos
-
-    private static ResultSet resultSet; //00021223 campo para almacenar los resultados de las consultas que lo requieran
-
-    private static PreparedStatement preparedStatement; //00021223 campo para preparar y ejecutar cada consulta requerida
-
-    public static Connection getConnection() throws SQLException { //00021223 metodo para obtener la conexion a la base de datos
+    @Override
+    public Connection getConnection() throws SQLException{ //00021223 metodo para obtener la conexion a la base de datos
         return DriverManager.getConnection(url, user, password); //00021223 retorna la conexion a la base de datos
     }
+
+    //todo metodo para actualizar registros en la base de datos
+
+    //todo metodo para eliminar registros en la base de datos
+
+    //todo metodo para ejecutar consulta para reporte A
+
+    //todo metodo para ejecutar consulta para reporte B
+
+    //todo metodo para ejecutar consulta para reporte C
+
+    //todo metodo para ejecutar consulta para reporte D
 
 }
