@@ -50,11 +50,13 @@
                                           <TextField fx:id="tfIdClienteRA" layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
                                           <Label layoutX="93.0" layoutY="14.0" text="Compras del cliente" />
-                                          <DatePicker fx:id="dpFechaInicialRA" layoutX="14.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <DatePicker fx:id="dpFechaInicial" layoutX="14.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="118.0" text="Fecha inicial" />
-                                          <DatePicker fx:id="dpFechaFinalRA" layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <DatePicker fx:id="dpFechaFinal" layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="184.0" text="Fecha final" />
-                                          <Label layoutX="176.0" layoutY="97.0" text="Campo obligatorio" />
+                                          <Label fx:id="campoObligatorio1" layoutX="176.0" layoutY="97.0" text="Campo obligatorio" textFill="RED" />
+                                          <Label fx:id="campoObligatorio2" layoutX="176.0" layoutY="161.0" text="Campo obligatorio" textFill="RED" />
+                                          <Label fx:id="campoObligatorio3" layoutX="176.0" layoutY="227.0" text="Campo obligatorio" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>

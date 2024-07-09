@@ -1,6 +1,7 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
 import org.parcialfinal_poo.models.Banco.Compra;
+import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 import org.parcialfinal_poo.models.DataBase.DataBase;
 
 import java.sql.Date;
@@ -42,7 +43,7 @@ public abstract class DataBaseQueries extends DataBase {
 
     public abstract double generarReporteB(int clienteID, Date fecha);
 
-    public abstract ArrayList<String> generarReporteC(int clienteID);
+    public abstract void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito);
 
     //public abstract
 }

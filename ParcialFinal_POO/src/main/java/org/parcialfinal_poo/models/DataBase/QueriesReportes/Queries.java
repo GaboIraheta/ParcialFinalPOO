@@ -1,5 +1,6 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
+import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 
@@ -54,7 +55,9 @@ public class Queries extends DataBaseQueries {
                 compras.add(compra); //00021223 agrega el cliente obtenido a la lista de compras que se va a retornar
             }
 
-           return compras; //00021223 luego de haber obtenido todos los registros de compras de la base de datos, retorna la lista con cada uno de los registros como objetos Compra
+            connection.close();
+
+            return compras; //00021223 luego de haber obtenido todos los registros de compras de la base de datos, retorna la lista con cada uno de los registros como objetos Compra
 
         } catch (SQLException e) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -70,8 +73,42 @@ public class Queries extends DataBaseQueries {
     }
 
     @Override
-    public ArrayList<String> generarReporteC(int clienteID) {
-        return null;
+    public void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            PreparedStatement stm = connection.prepareStatement(DataBaseQueries.getReportQuery(3));
+            stm.setString(1, "Credito");
+            stm.setInt(2, clienteID);
+            ResultSet rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+            stm.setString(1, "Debito");
+            rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No se encontro el cliente o hubo un error al ingresar los datos");
+            alert.showAndWait();
+        } finally {
+            if (connection != null){
+                try{
+                    connection.close();
+                } catch (SQLException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error al cerrar el archivo");
+                    alert.showAndWait();
+                }
+            }
+        }
+
     }
 
     public ResultSet generarReporteD(Facilitador facilitador) { //00042823 General el resultSet del reporte D, que se usará directamente en el GUI
@@ -88,5 +125,22 @@ public class Queries extends DataBaseQueries {
             return null; //00042823 Estoy forzado a devolver algo, así que si algo sale mal, la función devuelve nulo (rompemos el programa de todas formas)
         }
 
+    }
+
+
+    private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException {
+        while (rs.next()){
+            StringBuilder num = new StringBuilder();
+            String[] Tarjeta = rs.getString("numTarjeta").split(" ");
+            for (int i = 0; i < Tarjeta.length; i++){
+                if (i == Tarjeta.length - 1){
+                    num.append(Tarjeta[i]);
+                } else {
+                    num.append("XXXX ");
+                }
+            }
+
+            tarjetas.add(String.valueOf(num));
+        }
     }
 }

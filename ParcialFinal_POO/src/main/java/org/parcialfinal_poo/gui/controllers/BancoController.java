@@ -5,14 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.parcialfinal_poo.models.Banco.Cliente;
+import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.DataBase.DataBase;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 import static java.sql.DriverManager.getConnection;
@@ -82,11 +80,43 @@ public class BancoController {
     public void handleBtnConsultar(){ //00042823 Se define la función que se realizará cuando se haga una acción con btnGenerarReporte
         if(tabReporteA.isSelected()) {
 
+            campoObligatorio1.setVisible(false);
+            campoObligatorio2.setVisible(false);
+            campoObligatorio3.setVisible(false);
+
             boolean flag = false;
-            
+
             if(tfIdClienteRA.getText().isEmpty()) {
                 campoObligatorio1.setVisible(true);
                 flag = true;
+            }
+
+            if(dpFechaInicial.getValue() == null) {
+                campoObligatorio2.setVisible(true);
+                flag = true;
+            }
+
+            if(dpFechaFinal.getValue() == null) {
+                campoObligatorio3.setVisible(true);
+                flag = true;
+            }
+
+            if(!flag) {
+
+                ArrayList<Compra> compras = Queries.getInstance().generarReporteA(Integer.parseInt(tfIdClienteRA.getText()),
+                        Date.valueOf(dpFechaFinal.getValue()), Date.valueOf(dpFechaFinal.getValue()));
+
+                String text = "";
+
+                for(Compra compra : compras) {
+                    System.out.println(compra.getCodigo());
+                    text = text.concat(compra.getCodigo() + "\n" + compra.getFechaCompra() + "\n" + compra.getDescripcion() + "\n" +
+                            compra.getMonto() + "\n" + compra.getTarjetaID() + "\n\n");
+                }
+
+                taMuestraReporte.setText(text);
+
+                System.out.println(text);
             }
         }
         else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
