@@ -1,17 +1,10 @@
 package org.parcialfinal_poo.models.Banco.Tarjetas;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.DataBase.Selects.Select;
 
 import java.sql.Date;
 import java.util.ArrayList;
-
-@AllArgsConstructor //00021223 constructor que recibe todos los campos de la clase
-@Getter //00021223 se declaran todos los setters de cada campo
-@Setter //00021223 se declaran todos los getters de cada campo
 
 public class Tarjeta {
 
@@ -26,6 +19,16 @@ public class Tarjeta {
 
     public Tarjeta() {
         compras = new ArrayList<>(); //00021223 inicializacion del array de compras
+    }
+
+    public Tarjeta(int id, int clienteID, String numeroTarjeta, Date fechaExpiracion, Facilitador facilitador, TipoTarjeta tipo, ArrayList<Compra> compras) {
+        this.id = id;
+        this.clienteID = clienteID;
+        this.numeroTarjeta = numeroTarjeta;
+        this.fechaExpiracion = fechaExpiracion;
+        this.facilitador = facilitador;
+        this.tipo = tipo;
+        this.compras = compras;
     }
 
     //todo temporal, tal vez se elimine si no se usa
@@ -52,5 +55,61 @@ public class Tarjeta {
         }
 
         temp.clear(); //00021223 se limpia la lista temporal para liberar espacio en memoria
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getClienteID() {
+        return clienteID;
+    }
+
+    public void setClienteID(int clienteID) {
+        this.clienteID = clienteID;
+    }
+
+    public String getNumeroTarjeta() {
+        return numeroTarjeta;
+    }
+
+    public void setNumeroTarjeta(String numeroTarjeta) {
+        this.numeroTarjeta = numeroTarjeta;
+    }
+
+    public Date getFechaExpiracion() {
+        return fechaExpiracion;
+    }
+
+    public void setFechaExpiracion(Date fechaExpiracion) {
+        this.fechaExpiracion = fechaExpiracion;
+    }
+
+    public Facilitador getFacilitador() {
+        return facilitador;
+    }
+
+    public void setFacilitador(Facilitador facilitador) {
+        this.facilitador = facilitador;
+    }
+
+    public TipoTarjeta getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoTarjeta tipo) {
+        this.tipo = tipo;
+    }
+
+    public ArrayList<Compra> getCompras() {
+        return compras;
+    }
+
+    public void setCompras(ArrayList<Compra> compras) {
+        this.compras = compras;
     }
 }

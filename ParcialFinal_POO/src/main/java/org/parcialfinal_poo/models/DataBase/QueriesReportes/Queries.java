@@ -111,6 +111,23 @@ public class Queries extends DataBaseQueries {
 
     }
 
+    public ResultSet generarReporteD(String facilitador) { //00042823 General el resultSet del reporte D, que se usará directamente en el GUI
+        try { //00042823 Para capturar errores que ocurran respecto a la conexión con la base de datos
+            connection = getConnection(); //00042823 Se abre la conexión con la base de datos
+
+            PreparedStatement preparedStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(4)); //00042823 Crea una forma segura de agregar parámetros a las consultas, siendo la consulta la necesaria para el reporte D
+            preparedStatement.setString(1, facilitador); //00042823 De manera segura se agrega el parámetro como atributo de un objeto, esto en el primer (y único) parámetro para la consulta
+
+            return preparedStatement.executeQuery(); //00042823 El método devuelve un objeto ResultSet, el cual es el valor de la función. Esto para luego obtener datos y usarlos directamente
+        }
+        catch (SQLException e){ //00042823 Si llegara a haber algún tipo de error en la conexión o en lógica de la consulta...
+            e.printStackTrace(); //00042823 ... Se imprime la cadena de excepciones que produjo el error
+            return null; //00042823 Estoy forzado a devolver algo, así que si algo sale mal, la función devuelve nulo (rompemos el programa de todas formas)
+        }
+
+    }
+
+
     private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException {
         while (rs.next()){
             StringBuilder num = new StringBuilder();
@@ -126,5 +143,4 @@ public class Queries extends DataBaseQueries {
             tarjetas.add(String.valueOf(num));
         }
     }
-
 }

@@ -16,7 +16,7 @@ public class BancoApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(),960,540); //00042823 Genera una escena con la configuración del fxml, ancho 960px largo 540px
         stage.setTitle("Sistema de registros"); //00042823 Establece el nombre de la ventana
         stage.setScene(scene); //00042823 Establece la configuración de la escena en una ventana
-        stage.show(); //00042823 Muestra la ventanaselec
+        stage.show(); //00042823 Muestra la ventana seleccionada
 
         Control.getInstance().loadClientes(); //00021223 se cargan todos los registros de la base de datos al sistema
     }
