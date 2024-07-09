@@ -180,20 +180,18 @@ public class BancoController {
             if(!flag) {
 
                 ArrayList<Compra> compras = Queries.getInstance().generarReporteA(Integer.parseInt(tfIdClienteRA.getText()),
-                        Date.valueOf(dpFechaFinal.getValue()), Date.valueOf(dpFechaFinal.getValue()));
+                        Date.valueOf(dpFechaInicial.getValue()), Date.valueOf(dpFechaFinal.getValue()));
 
                 String text = "";
 
                 for(Compra compra : compras) {
-                    System.out.println(compra.getCodigo());
                     text = text.concat(compra.getCodigo() + "\n" + compra.getFechaCompra() + "\n" + compra.getDescripcion() + "\n" +
                             compra.getMonto() + "\n" + compra.getTarjetaID() + "\n\n");
                 }
 
                 taMuestraReporte.setText(text);
-
-                System.out.println(text);
             }
+
         } else if (tabReporteB.isSelected()) {
             mostrarReporteB();
 
