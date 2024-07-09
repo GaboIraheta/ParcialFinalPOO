@@ -1,10 +1,10 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
+import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Compra;
+import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 
-import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Queries extends DataBaseQueries {
@@ -33,10 +33,13 @@ public class Queries extends DataBaseQueries {
             connection = getConnection(); //00021223 se establece la conexion a la base de datos por medio del
             //metodo estatico getConnection
 
-            Statement statement = connection.createStatement(); //00021223 se crea el statement para poder ejecutar la consulta
+            preparedStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(1)); //00021223 se crea prepara a consulta para si ejecucion
 
-            resultSet = statement.executeQuery(DataBaseQueries.getReportQuery(1)); //00021223 se ejecuta la query requerida
-            //y se guarda el resultado en un objeto ResultSet para poder acceder y manipular los datos obtenidos
+            preparedStatement.setInt(1, clienteID);
+            preparedStatement.setDate(2, fecha1);
+            preparedStatement.setDate(3, fecha2);
+
+            resultSet = preparedStatement.executeQuery(); //00021223 se ejecuta la consulta y el resultado de registros se almacena en el resultSet
 
             while(resultSet.next()) { //00021223 bucle while para recorrer el resultSet, la condicion es que el resultSet tenga un siguiente
 
@@ -52,7 +55,9 @@ public class Queries extends DataBaseQueries {
                 compras.add(compra); //00021223 agrega el cliente obtenido a la lista de compras que se va a retornar
             }
 
-           return compras; //00021223 luego de haber obtenido todos los registros de compras de la base de datos, retorna la lista con cada uno de los registros como objetos Compra
+            connection.close();
+
+            return compras; //00021223 luego de haber obtenido todos los registros de compras de la base de datos, retorna la lista con cada uno de los registros como objetos Compra
 
         } catch (SQLException e) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -68,7 +73,74 @@ public class Queries extends DataBaseQueries {
     }
 
     @Override
-    public ArrayList<String> generarReporteC(int clienteID) {
-        return null;
+    public void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            PreparedStatement stm = connection.prepareStatement(DataBaseQueries.getReportQuery(3));
+            stm.setString(1, "Credito");
+            stm.setInt(2, clienteID);
+            ResultSet rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+            stm.setString(1, "Debito");
+            rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No se encontro el cliente o hubo un error al ingresar los datos");
+            alert.showAndWait();
+        } finally {
+            if (connection != null){
+                try{
+                    connection.close();
+                } catch (SQLException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error al cerrar el archivo");
+                    alert.showAndWait();
+                }
+            }
+        }
+
+    }
+
+    public ResultSet generarReporteD(Facilitador facilitador) { //00042823 General el resultSet del reporte D, que se usará directamente en el GUI
+        try { //00042823 Para capturar errores que ocurran respecto a la conexión con la base de datos
+            connection = getConnection(); //00042823 Se abre la conexión con la base de datos
+
+            PreparedStatement preparedStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(4)); //00042823 Crea una forma segura de agregar parámetros a las consultas, siendo la consulta la necesaria para el reporte D
+            preparedStatement.setString(1, facilitador.toString()); //00042823 De manera segura se agrega el parámetro como atributo de un objeto, esto en el primer (y único) parámetro para la consulta
+
+            return preparedStatement.executeQuery(); //00042823 El método devuelve un objeto ResultSet, el cual es el valor de la función. Esto para luego obtener datos y usarlos directamente
+        }
+        catch (SQLException e){ //00042823 Si llegara a haber algún tipo de error en la conexión o en lógica de la consulta...
+            e.printStackTrace(); //00042823 ... Se imprime la cadena de excepciones que produjo el error
+            return null; //00042823 Estoy forzado a devolver algo, así que si algo sale mal, la función devuelve nulo (rompemos el programa de todas formas)
+        }
+
+    }
+
+
+    private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException {
+        while (rs.next()){
+            StringBuilder num = new StringBuilder();
+            String[] Tarjeta = rs.getString("numTarjeta").split(" ");
+            for (int i = 0; i < Tarjeta.length; i++){
+                if (i == Tarjeta.length - 1){
+                    num.append(Tarjeta[i]);
+                } else {
+                    num.append("XXXX ");
+                }
+            }
+
+            tarjetas.add(String.valueOf(num));
+        }
     }
 }

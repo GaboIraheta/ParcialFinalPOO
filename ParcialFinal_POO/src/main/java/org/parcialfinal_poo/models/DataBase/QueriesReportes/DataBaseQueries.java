@@ -1,6 +1,7 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
 import org.parcialfinal_poo.models.Banco.Compra;
+import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 import org.parcialfinal_poo.models.DataBase.DataBase;
 
 import java.sql.Date;
@@ -13,7 +14,7 @@ public abstract class DataBaseQueries extends DataBase {
         if(query == 1) { //00021223 se verifica si la query requerida es para el reporte A
             return """
                     select c.* from Compra c inner join Tarjeta t on t.id = c.tarjetaID
-                    inner join Cliente on t.ClienteID = Cliente.?\s
+                    inner join Cliente on t.ClienteID = ?\s
                     where c.fechaCompra between ? and ?"""; //00021223 retorna la query para consultar un reporte A
         } else if(query == 2) { //00021223 se verifica si la query requerida es para el reporte B
             return """
@@ -26,13 +27,13 @@ public abstract class DataBaseQueries extends DataBase {
         } else if(query == 4) { //00021223 se verifica si la query requerida es para el reporte D
             return """
                     with TarjetaIDS (id) as\s
-                    (select t.id from Tarjeta t inner join Facilitador f on t.facilitadorID = f.id where f.facilitador = '?'),
+                    (select t.id from Tarjeta t inner join Facilitador f on t.facilitadorID = f.id where f.facilitador = ?),
                     ComprasCliente (id, numCompras, totalGastado) as\s
                     (select t.id, count(c.id), sum(c.monto) from Compra c inner join TarjetaIDS t on t.id = c.tarjetaID group by t.id),
                     Clientes (id, compras, total) as
                     (select c.clienteID, t.numCompras, t.totalGastado from ComprasCliente t inner join Tarjeta c on t.id = c.id)
                     select c.id, c.nombres, c.apellidos, c.numTelefono, t.compras, t.total
-                     from Cliente c inner join Clientes t on t.id = c.id"""; //00021223 retorna la query para consultar el reporte D
+                    from Cliente c inner join Clientes t on t.id = c.id"""; //00021223 retorna la query para consultar el reporte D
         } else {
             return ""; //00021223 si no se le manda un parametro correcto retorna una cadena vacia
         }
@@ -42,7 +43,7 @@ public abstract class DataBaseQueries extends DataBase {
 
     public abstract double generarReporteB(int clienteID, Date fecha);
 
-    public abstract ArrayList<String> generarReporteC(int clienteID);
+    public abstract void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito);
 
     //public abstract
 }

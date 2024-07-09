@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="730.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="730.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.parcialfinal_poo.gui.controllers.BancoController">
   <tabs>
     <Tab closable="false" text="Registro">
       <content>
@@ -53,17 +43,20 @@
                         <Label text="Seleccione el reporte:" />
                         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                           <tabs>
-                            <Tab closable="false" text="Reporte A">
+                            <Tab fx:id="tabReporteA" closable="false" text="Reporte A">
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <TextField layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <TextField fx:id="tfIdClienteRA" layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
                                           <Label layoutX="93.0" layoutY="14.0" text="Compras del cliente" />
-                                          <DatePicker layoutX="14.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <DatePicker fx:id="dpFechaInicial" layoutX="14.0" layoutY="135.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="118.0" text="Fecha inicial" />
-                                          <DatePicker layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <DatePicker fx:id="dpFechaFinal" layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="184.0" text="Fecha final" />
+                                          <Label fx:id="campoObligatorio1" layoutX="176.0" layoutY="97.0" text="Campo obligatorio" textFill="RED" />
+                                          <Label fx:id="campoObligatorio2" layoutX="176.0" layoutY="161.0" text="Campo obligatorio" textFill="RED" />
+                                          <Label fx:id="campoObligatorio3" layoutX="176.0" layoutY="227.0" text="Campo obligatorio" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -94,13 +87,13 @@
                                     </AnchorPane>
                                  </content>
                               </Tab>
-                              <Tab closable="false" text="Reporte D">
+                              <Tab fx:id="tabReporteD" closable="false" text="Reporte D">
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
                                           <Label layoutX="10.0" layoutY="54.0" text="Facilitador" AnchorPane.leftAnchor="10.0" />
                                           <Label layoutX="85.0" layoutY="14.0" text="Clientes por facilitador" />
-                                          <ComboBox layoutX="10.0" layoutY="71.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <ComboBox fx:id="cmbFacilitador" layoutX="10.0" layoutY="71.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -112,7 +105,7 @@
                         </TabPane>
                         <HBox alignment="CENTER" spacing="50.0">
                            <children>
-                              <Button alignment="BASELINE_CENTER" mnemonicParsing="false" prefWidth="105.0" text="Consultar" />
+                              <Button fx:id="btnConsultar" alignment="BASELINE_CENTER" mnemonicParsing="false" onAction="#handleBtnConsultar" prefWidth="105.0" text="Consultar" />
                               <Button mnemonicParsing="false" prefWidth="105.0" text="Generar reporte" />
                            </children>
                            <padding>
@@ -121,7 +114,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <TextArea layoutX="434.0" layoutY="20.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <TextArea fx:id="taMuestraReporte" layoutX="434.0" layoutY="20.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children></AnchorPane>
       </content>
     </Tab>
