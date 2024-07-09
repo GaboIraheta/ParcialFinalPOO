@@ -4,10 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.parcialfinal_poo.models.Banco.Cliente;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
-import org.parcialfinal_poo.models.DataBase.DataBase;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.*;
@@ -19,15 +17,11 @@ import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class BancoController {
-
-
     //00022423 // Definición de los elementos de la interfaz de usuario (botones, cuadros combinados, campos de texto, etc.)
     @FXML
     private Button btnConsultar;
-
 
     @FXML
     private Tab tabReporteA = new Tab();
@@ -103,8 +97,44 @@ public class BancoController {
         cbMes.setItems(FXCollections.observableArrayList("enero",
                 "febrero", "marzo", "abril", "mayo", "junio", "agosto",
                 "septiembre", "octubre", "noviembre", "diciembre"));
+    }
 
+    private void mostrarReporteA() {
+        campoObligatorio1.setVisible(false);
+        campoObligatorio2.setVisible(false);
+        campoObligatorio3.setVisible(false);
 
+        boolean flag = false;
+
+        if (tfIdClienteRA.getText().isEmpty()) {
+            campoObligatorio1.setVisible(true);
+            flag = true;
+        }
+
+        if (dpFechaInicial.getValue() == null) {
+            campoObligatorio2.setVisible(true);
+            flag = true;
+        }
+
+        if (dpFechaFinal.getValue() == null) {
+            campoObligatorio3.setVisible(true);
+            flag = true;
+        }
+
+        if (!flag) {
+
+            ArrayList<Compra> compras = Queries.getInstance().generarReporteA(Integer.parseInt(tfIdClienteRA.getText()),
+                    Date.valueOf(dpFechaInicial.getValue()), Date.valueOf(dpFechaFinal.getValue()));
+
+            String text = "";
+
+            for (Compra compra : compras) {
+                text = text.concat(compra.getCodigo() + "\n" + compra.getFechaCompra() + "\n" + compra.getDescripcion() + "\n" +
+                        compra.getMonto() + "\n" + compra.getTarjetaID() + "\n\n");
+            }
+
+            taMuestraReporte.setText(text);
+        }
     }
 
     private void mostrarReporteB() {
@@ -158,10 +188,10 @@ public class BancoController {
 
             text = text.concat("\n\nTarjetas de débito del cliente:\n");//00088023 Le da formato al texto para mostrar las tarjetas de débito
 
-            if (debito.isEmpty()){//00088023 Revisa si el array no está vacio
+            if (debito.isEmpty()) {//00088023 Revisa si el array no está vacio
                 text = text.concat("N/A");//00088023 Si lo está, entonces escribe "N/A"
             } else {
-                for (String tarjeta : debito){//00088023 Si no esta vacio, entonces escribe todas las tarjetas en el texto
+                for (String tarjeta : debito) {//00088023 Si no esta vacio, entonces escribe todas las tarjetas en el texto
                     text = text.concat(tarjeta + "\n");
                 }
             }
@@ -170,6 +200,37 @@ public class BancoController {
 
         } catch (Exception e) {
             mostrarAlerta("Error", "Ingrese un valor válido");//00088023 Este error se recibe por el parseInteger, por lo tanto el usuario ingreso un valor no válido
+        }
+    }
+
+    private void mostrarReporteD() {
+        if (cmbFacilitador.getValue() != null) { //00042823 Si hay una opción selecciona por cmbFacilitador...
+            String text = ""; //00042823 Es una cadena vacía que tiene como propósito concatenar el contenido completo del reporte D
+            ResultSet rs = Queries.getInstance().generarReporteD(cmbFacilitador.getValue()); //00042823 Se llama al singleton Queries para hacer la consulta para el reporte D con el facilitador seleccionado, el cual se almacena en un ResultSet
+
+            boolean flag = true; //00042823 Se crea una bandera que sirva para indicar si hay valores en el ResultSet
+            try { //00042823 El método next() para ResultSet lanza SQLExceptions que no pueden dejarse irresolubles
+                while (flag) { //00042823 Bucle para recorrer las "filas" de la tabla a consultar
+                    if (rs.next()) {
+                        text = text.concat( //00042823 Por cada cliente, se concatena la siguiente información
+                                "Cliente: " + rs.getInt("id") + "\n" //00042823 El ID del cliente
+                                        + rs.getString("nombres") + " " + rs.getString("apellidos") + "\n" //00042823 Nombre completo del cliente
+                                        + "Teléfono: " + rs.getString("numTelefono") + "\n" //00042823 Número de teléfono del cliente
+                                        + "Total de compras: " + rs.getString("compras") + "\n" //00042823 Cuántas compras ha realizado el cliente por medio del facilitador
+                                        + "Gasto total: $" + rs.getDouble("total") + "\n\n" //00042823 Cuánto ha gastado en total el cliente por medio del facilitador
+                        );
+                    } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
+                        flag = false; //00042823 Baja la bandera
+                        DriverManager.getConnection("jdbc:mysql://localhost/dbBCN", "gabo7", "Afb092ebbf$").close(); //00042823 Y cierra la conexión con la base de datos, esto de una manera poco ortodoxa
+                    }
+                }
+                taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes
+            } catch (SQLException e) { //00042823 Si algo malo ocurre, entonces atrapa la excepción...
+                e.printStackTrace(); //00042823 ... Para luego imprimir la cadena de errores de la excepción
+            }
+
+        } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
+            //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
         }
     }
 
@@ -189,83 +250,16 @@ public class BancoController {
 
     public void handleBtnConsultar() { //00042823 Se define la función que se realizará cuando se haga una acción con btnGenerarReporte
         if (tabReporteA.isSelected()) {
-
-            campoObligatorio1.setVisible(false);
-            campoObligatorio2.setVisible(false);
-            campoObligatorio3.setVisible(false);
-
-            boolean flag = false;
-
-            if (tfIdClienteRA.getText().isEmpty()) {
-                campoObligatorio1.setVisible(true);
-                flag = true;
-            }
-
-            if (dpFechaInicial.getValue() == null) {
-                campoObligatorio2.setVisible(true);
-                flag = true;
-            }
-
-            if (dpFechaFinal.getValue() == null) {
-                campoObligatorio3.setVisible(true);
-                flag = true;
-            }
-
-            if (!flag) {
-
-                ArrayList<Compra> compras = Queries.getInstance().generarReporteA(Integer.parseInt(tfIdClienteRA.getText()),
-                        Date.valueOf(dpFechaFinal.getValue()), Date.valueOf(dpFechaFinal.getValue()));
-
-                String text = "";
-
-                for (Compra compra : compras) {
-                    System.out.println(compra.getCodigo());
-                    text = text.concat(compra.getCodigo() + "\n" + compra.getFechaCompra() + "\n" + compra.getDescripcion() + "\n" +
-                            compra.getMonto() + "\n" + compra.getTarjetaID() + "\n\n");
-                }
-
-                taMuestraReporte.setText(text);
-
-                System.out.println(text);
-            }
+            mostrarReporteA();
         } else if (tabReporteB.isSelected()) {
             mostrarReporteB();
-
         } else if (tabReporteC.isSelected()) {
-            mostrarReporteC(); //00880023 Si la tabC está seleccionada, entonces imprimirá el reporte C
-
+            mostrarReporteC();
         } else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
-
-            if (cmbFacilitador.getValue() != null) { //00042823 Si hay una opción selecciona por cmbFacilitador...
-                String text = ""; //00042823 Es una cadena vacía que tiene como propósito concatenar el contenido completo del reporte D
-                ResultSet rs = Queries.getInstance().generarReporteD(cmbFacilitador.getValue()); //00042823 Se llama al singleton Queries para hacer la consulta para el reporte D con el facilitador seleccionado, el cual se almacena en un ResultSet
-
-                boolean flag = true; //00042823 Se crea una bandera que sirva para indicar si hay valores en el ResultSet
-                try { //00042823 El método next() para ResultSet lanza SQLExceptions que no pueden dejarse irresolubles
-                    while (flag) { //00042823 Bucle para recorrer las "filas" de la tabla a consultar
-                        if (rs.next()) {
-                            text = text.concat( //00042823 Por cada cliente, se concatena la siguiente información
-                                    "Cliente: " + rs.getInt("id") + "\n" //00042823 El ID del cliente
-                                            + rs.getString("nombres") + " " + rs.getString("apellidos") + "\n" //00042823 Nombre completo del cliente
-                                            + "Teléfono: " + rs.getString("numTelefono") + "\n" //00042823 Número de teléfono del cliente
-                                            + "Total de compras: " + rs.getString("compras") + "\n" //00042823 Cuántas compras ha realizado el cliente por medio del facilitador
-                                            + "Gasto total: $" + rs.getDouble("total") + "\n\n" //00042823 Cuánto ha gastado en total el cliente por medio del facilitador
-                            );
-                        } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
-                            flag = false; //00042823 Baja la bandera
-                            DriverManager.getConnection("jdbc:mysql://localhost/dbBCN", "root", "Mrdl2005").close(); //00042823 Y cierra la conexión con la base de datos, esto de una manera poco ortodoxa
-                        }
-                    }
-                    taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes
-                } catch (SQLException e) { //00042823 Si algo malo ocurre, entonces atrapa la excepción...
-                    e.printStackTrace(); //00042823 ... Para luego imprimir la cadena de errores de la excepción
-                }
-
-            } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
-                //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
-            }
-        } else {
-            System.out.println("No le sabes");
+            mostrarReporteD();
+        } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
+            //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
         }
+
     }
 }
