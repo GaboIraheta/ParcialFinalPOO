@@ -82,7 +82,7 @@ public class BancoController {
 
             // 00022423 Definir el rango de años válidos
             int anioMinimo = 1900;
-            int anioMaximo = LocalDate.now().getYear();
+            int anioMaximo = 2100;
 
             // 00022423 Verificar que se hayan seleccionado mes y año válidos
             if (mes != null && !mes.isEmpty() && anio >= anioMinimo && anio <= anioMaximo) {
@@ -90,8 +90,8 @@ public class BancoController {
                 int mesIndex = cbMes.getItems().indexOf(mes) + 1;
                 // 00022423 Obtener el total de gasto del cliente para el mes y año seleccionados
                 double totalGasto = Queries.getInstance().generarReporteB(clienteID, anio, mesIndex);
-                // 00022423 Mostrar el resultado en el TextArea
-                taMuestraReporte.setText("Total Gasto del Cliente ID " + clienteID + " en " + mes.toUpperCase() + " " + anio + " es: " + totalGasto);
+                // 00022424 Mostrar el resultado en el TextArea
+                taMuestraReporte.setText("El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: " + totalGasto);
             } else {
                 // 00022423 Mostrar una alerta si los datos no son válidos
                 mostrarAlerta("Entrada Inválida", "Por favor, seleccione un mes y un año válidos entre " + anioMinimo + " y " + anioMaximo + ".");
@@ -105,6 +105,7 @@ public class BancoController {
             mostrarAlerta("Error", "Ocurrió un error al generar el reporte: " + e.getMessage());
         }
     }
+
 
 
     // 00022423 Método para mostrar una alerta con un título y mensaje específicos
