@@ -76,7 +76,7 @@
                                     </AnchorPane>
                                  </content>
                               </Tab>
-                              <Tab closable="false" text="Reporte C">
+                              <Tab fx:id="tabReporteC" closable="false" text="Reporte C">
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>

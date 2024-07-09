@@ -103,33 +103,33 @@ public class Queries extends DataBaseQueries {
     }
 
     @Override
-    public void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito) {
-        Connection connection = null;
+    public void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito) { //00088023 método que se encarga de realizar el reporte C
+        Connection connection = null; //00088023 Se inicia una conexión nula que servirá más adelante
         try {
-            connection = getConnection();
+            connection = getConnection();//00088023 Recibe la conexión a la base de datos
 
-            PreparedStatement stm = connection.prepareStatement(DataBaseQueries.getReportQuery(3));
-            stm.setString(1, "Credito");
-            stm.setInt(2, clienteID);
-            ResultSet rs = stm.executeQuery();
-            fillArraysTarjetas(rs, tarjetasCredito);
+            PreparedStatement stm = connection.prepareStatement(DataBaseQueries.getReportQuery(3)); //00088023 Prepara el statement de la query
+            stm.setString(1, "Credito");//00088023 Le agrega el primer parámetro, siendo este el tipo de tarjeta
+            stm.setInt(2, clienteID);//00088023 Le agrega el segundo parámetro, el id del cliente
+            ResultSet rs = stm.executeQuery();//00088023 Se hace un result set que devuelve las tarjetas de crédito
+            fillArraysTarjetas(rs, tarjetasCredito);//00088023 manda a llamar al método para llenar el array de tarjetas de crédito
 
-            stm.setString(1, "Debito");
-            rs = stm.executeQuery();
-            fillArraysTarjetas(rs, tarjetasCredito);
+            stm.setString(1, "Debito"); //00088023 Cambia el statement para recibir las tarjetas de débito
+            rs = stm.executeQuery();//00088023 Ejecuta la query y lo almacena en el result set
+            fillArraysTarjetas(rs, tarjetasDebito);//00088023 manda a llamar a la función para llenar el array de tarjetas de crédito
 
 
-        }catch (Exception e){
+        }catch (Exception e){ //00088023 En el caso de que sucesa un error en la conexión manda una alerta
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("No se encontro el cliente o hubo un error al ingresar los datos");
             alert.showAndWait();
         } finally {
-            if (connection != null){
+            if (connection != null){ //00088023 Al finalizar verifica si la conexión es nula
                 try{
-                    connection.close();
-                } catch (SQLException e) {
+                    connection.close();//00088023 Si se logro inicializar la conexión, entonces la cierra
+                } catch (SQLException e) { //00088023 Si hubo un error al cerrar la conexión, entonces alerta al usuario
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
@@ -158,19 +158,19 @@ public class Queries extends DataBaseQueries {
     }
 
 
-    private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException {
-        while (rs.next()){
-            StringBuilder num = new StringBuilder();
-            String[] Tarjeta = rs.getString("numTarjeta").split(" ");
-            for (int i = 0; i < Tarjeta.length; i++){
-                if (i == Tarjeta.length - 1){
+    private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException { //00088023 método encargado de llenar los arrays de tarjetas
+        while (rs.next()){//00088023 mientras el resultset todavia tenga datos seguira realizando el bucle
+            StringBuilder num = new StringBuilder();//00088023 Se crea un string builder para realizar la censura
+            String[] Tarjeta = rs.getString("numTarjeta").split(" "); //00088023 Obtiene el numero de la tarjeta del result set y la separa por espacios
+            for (int i = 0; i < Tarjeta.length; i++){ //00088023 crea un bucle que se repetira tantas veces como elementos tenga
+                if (i == Tarjeta.length - 1){//00088023 Si es la última iteración, entonces agrega los últimos cuatro dígitos de la tarjeta
                     num.append(Tarjeta[i]);
                 } else {
-                    num.append("XXXX ");
+                    num.append("XXXX "); //00088023 En el caso que sea cualquier otra iteración, entonces ecnsurará los números agregando un XXXX a la tarjeta
                 }
             }
 
-            tarjetas.add(String.valueOf(num));
+            tarjetas.add(String.valueOf(num));//00088023 finalmente agrega el resultado al array de tarjetas
         }
     }
 }

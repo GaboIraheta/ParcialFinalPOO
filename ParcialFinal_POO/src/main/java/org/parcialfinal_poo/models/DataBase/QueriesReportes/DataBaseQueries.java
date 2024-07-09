@@ -26,7 +26,7 @@ public abstract class DataBaseQueries extends DataBase {
                    """; //00021223 retorna la query para consultar un reporte B
         } else if(query == 3) { //00021223 se verifica si la query requerida es para el reporte C
             return "select numTarjeta from Tarjeta \n" +
-                    "where tipo like '?' and ClienteID = ?"; //00021223 retorna la query para consultar el reporte C
+                    "where tipo like ? and ClienteID = ?"; //00021223 retorna la query para consultar el reporte C
         } else if(query == 4) { //00021223 se verifica si la query requerida es para el reporte D
             return """
                     with TarjetaIDS (id) as\s

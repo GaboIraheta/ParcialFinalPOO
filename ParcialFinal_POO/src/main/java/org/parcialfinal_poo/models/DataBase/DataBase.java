@@ -10,7 +10,7 @@ public abstract class DataBase implements ConnectionInterface { //00021223 clase
 
     private static final String url = "jdbc:mysql://localhost/dbBCN";
     private static final String user = "root";
-    private static final String password = "Mrdl2005";
+    private static final String password = "Napstablook1!";
 
     protected static Connection connection; //00021223 campo para almacenar la conexion a la base de datos
 
