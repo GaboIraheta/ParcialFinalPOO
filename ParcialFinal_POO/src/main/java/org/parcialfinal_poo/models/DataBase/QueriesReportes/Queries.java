@@ -61,7 +61,7 @@ public class Queries extends DataBaseQueries {
     }
 
     @Override
-    public double generarReporteB(int clienteID, Date fecha) {
+    public double generarReporteB(int clienteID, int year, int month) {
         //00022423 se define metodo abstracto que se encarga de realizar la consulta a la base de datos para generar reporte A
 
 
@@ -76,9 +76,9 @@ public class Queries extends DataBaseQueries {
             //00022423 Se establece el primer parámetro de la consulta preparada como el ID del cliente (clienteID).
             prepareStatement.setInt(1,clienteID);
             // 00022423 Se establece el segundo parámetro de la consulta preparada como el año de la fecha proporcionada.
-            prepareStatement.setInt(2,fecha.toLocalDate().getYear());
+            prepareStatement.setInt(2,year);
             //00022423 Se establece el tercer parámetro de la consulta preparada como el mes de la fecha proporcionada.
-            prepareStatement.setInt(3,fecha.toLocalDate().getMonthValue());
+            prepareStatement.setInt(3,month);
             // 00022423 Se ejecuta la consulta y se obtiene el resultado en un objeto ResultSet.
             ResultSet rs = prepareStatement.executeQuery();
 

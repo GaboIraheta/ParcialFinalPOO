@@ -8,9 +8,7 @@ import org.parcialfinal_poo.models.DataBase.Selects.Select;
 
 import java.util.ArrayList;
 
-@AllArgsConstructor //00021223 constructor que recibe todos los campos del objeeto
-@Setter //00021223 se declaran todos los setters de la clase
-@Getter //00021223 se declaran todos los getters de la clase
+
 
 public class Cliente {
 
@@ -58,5 +56,53 @@ public class Cliente {
             tarjeta.loadCompras(tarjeta.getId()); //00021223 a cada tarjeta se le manda a llamar su metodo de loadCompras para cargar
             //todas las compras de la base de datos asociadas a dicha tarjeta con el ID que se le pasa
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public ArrayList<Tarjeta> getTarjetas() {
+        return tarjetas;
+    }
+
+    public void setTarjetas(ArrayList<Tarjeta> tarjetas) {
+        this.tarjetas = tarjetas;
     }
 }

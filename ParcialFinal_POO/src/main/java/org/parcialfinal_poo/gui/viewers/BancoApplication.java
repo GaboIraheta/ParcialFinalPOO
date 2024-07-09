@@ -18,7 +18,7 @@ public class BancoApplication extends Application {
         stage.setScene(scene); //00042823 Establece la configuración de la escena en una ventana
         stage.show(); //00042823 Muestra la ventanaselec
 
-        Control.getInstance().loadClientes(); //00021223 se cargan todos los registros de la base de datos al sistema
+        //Control.getInstance().loadClientes(); //00021223 se cargan todos los registros de la base de datos al sistema
     }
 
     public static void main(String[] args) {
