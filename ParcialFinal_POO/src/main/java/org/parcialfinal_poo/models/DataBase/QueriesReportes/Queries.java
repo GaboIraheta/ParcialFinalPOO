@@ -33,10 +33,13 @@ public class Queries extends DataBaseQueries {
             connection = getConnection(); //00021223 se establece la conexion a la base de datos por medio del
             //metodo estatico getConnection
 
-            Statement statement = connection.createStatement(); //00021223 se crea el statement para poder ejecutar la consulta
+            preparedStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(1)); //00021223 se crea prepara a consulta para si ejecucion
 
-            resultSet = statement.executeQuery(DataBaseQueries.getReportQuery(1)); //00021223 se ejecuta la query requerida
-            //y se guarda el resultado en un objeto ResultSet para poder acceder y manipular los datos obtenidos
+            preparedStatement.setInt(1, clienteID);
+            preparedStatement.setDate(2, fecha1);
+            preparedStatement.setDate(3, fecha2);
+
+            resultSet = preparedStatement.executeQuery(); //00021223 se ejecuta la consulta y el resultado de registros se almacena en el resultSet
 
             while(resultSet.next()) { //00021223 bucle while para recorrer el resultSet, la condicion es que el resultSet tenga un siguiente
 
