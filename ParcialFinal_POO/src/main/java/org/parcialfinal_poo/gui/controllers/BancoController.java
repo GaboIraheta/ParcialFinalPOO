@@ -44,4 +44,7 @@ public class BancoController {
     @FXML
     private TextField tfIdClienteRC;
 
+    @FXML
+    private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
+
 }
