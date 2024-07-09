@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.parcialfinal_poo.models.Banco.Control.Control;
-import org.parcialfinal_poo.models.DataBase.Inserts.Insert;
 
 import java.io.IOException;
 
