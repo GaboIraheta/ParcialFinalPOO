@@ -48,4 +48,8 @@ public class Control { //00021223 esta clase solo es para llevar el control de l
         }
 
     }
+
+    public ArrayList<Cliente> getClientes() {
+        return clientes;
+    }
 }
