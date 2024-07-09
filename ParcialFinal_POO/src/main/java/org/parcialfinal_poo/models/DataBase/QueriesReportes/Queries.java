@@ -1,11 +1,10 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
+import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Compra;
+import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Queries extends DataBaseQueries {
@@ -56,6 +55,7 @@ public class Queries extends DataBaseQueries {
 
                 compras.add(compra); //00021223 agrega el cliente obtenido a la lista de compras que se va a retornar
             }
+            connection.close();
 
            return compras; //00021223 luego de haber obtenido todos los registros de compras de la base de datos, retorna la lista con cada uno de los registros como objetos Compra
 
@@ -73,7 +73,58 @@ public class Queries extends DataBaseQueries {
     }
 
     @Override
-    public ArrayList<String> generarReporteC(int clienteID) {
-        return null;
+    public void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            PreparedStatement stm = connection.prepareStatement(DataBaseQueries.getReportQuery(3));
+            stm.setString(1, "Credito");
+            stm.setInt(2, clienteID);
+            ResultSet rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+            stm.setString(1, "Debito");
+            rs = stm.executeQuery();
+            fillArraysTarjetas(rs, tarjetasCredito);
+
+
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No se encontro el cliente o hubo un error al ingresar los datos");
+            alert.showAndWait();
+        } finally {
+            if (connection != null){
+                try{
+                    connection.close();
+                } catch (SQLException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error al cerrar el archivo");
+                    alert.showAndWait();
+                }
+            }
+        }
+
     }
+
+    private void fillArraysTarjetas(ResultSet rs, ArrayList<String> tarjetas) throws SQLException {
+        while (rs.next()){
+            StringBuilder num = new StringBuilder();
+            String[] Tarjeta = rs.getString("numTarjeta").split(" ");
+            for (int i = 0; i < Tarjeta.length; i++){
+                if (i == Tarjeta.length - 1){
+                    num.append(Tarjeta[i]);
+                } else {
+                    num.append("XXXX ");
+                }
+            }
+
+            tarjetas.add(String.valueOf(num));
+        }
+    }
+
 }
