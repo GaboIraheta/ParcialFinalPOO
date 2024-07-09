@@ -14,17 +14,25 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import static java.sql.DriverManager.getConnection;
+import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
+
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class BancoController {
 
+
+    //00022423 // Definición de los elementos de la interfaz de usuario (botones, cuadros combinados, campos de texto, etc.)
     @FXML
     private Button btnConsultar;
 
-    @FXML
-    private Tab btnConsultarRB;
 
     @FXML
     private Tab tabReporteA = new Tab();
+
+    @FXML
+    private Tab tabReporteB = new Tab();
 
     @FXML
     private Tab tabReporteD = new Tab(); //00042823 Objeto de tipo Tab, la pestaña se crea para verificar si está activa
@@ -40,15 +48,16 @@ public class BancoController {
 
     @FXML
     private DatePicker dpFechaInicial;
+    private DatePicker dpFechaFinalRA;
+
+    @FXML
+    private DatePicker dpFechaInicialRB;
 
     @FXML
     private DatePicker dpFechaFinal;
 
     @FXML
-    private Spinner<?> spnMonth;
-
-    @FXML
-    private Spinner<?> spnYear;
+    private DatePicker dpFechaFinalRB;
 
     @FXML
     private TextField tfIdClienteRA;
@@ -60,13 +69,22 @@ public class BancoController {
     private TextField tfIdClienteRC;
 
     @FXML
+    private ChoiceBox<String> cbMes;
+
+    @FXML
+    private TextField tfAnio;
+
+    @FXML
     private TextArea taMuestraReporte;
 
     @FXML
     private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
 
+
+
     @FXML
-    public void initialize(){ //00042823 Función que inicializa los componentes y cosas varias de la interfaz gráfica
+        // 00022423 Método que se ejecuta cuando la interfaz gráfica se inicializa
+   public void initialize() {
 
         campoObligatorio1.setVisible(false);
         campoObligatorio2.setVisible(false);
@@ -75,6 +93,64 @@ public class BancoController {
         cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress);
         ObservableList<Facilitador> facilitadores = FXCollections.observableArrayList(cmbFacilitador.getItems()); //00042823 Se crea una lista observable con el único propósito de agregar opciones a cmbFacilitador
         cmbFacilitador.setItems(facilitadores); //00042823 Se definen las opciones de cmbFacilitadores por medio de la lista observable
+
+        // 00022423 Asignar una acción al botón btnConsultar
+
+        //00022423 Llenar el ChoiceBox cbMes con los nombres de los meses
+        cbMes.setItems(FXCollections.observableArrayList("enero" ,
+                "febrero","marzo","abril","mayo","junio","agosto",
+                "septiembre","octubre","noviembre","diciembre"));
+
+
+    }
+
+    private void mostrarReporteB() {
+        try {
+            // 00022423 Obtener los valores ingresados por el usuario
+            int clienteID = Integer.parseInt(tfIdClienteRB.getText());
+            String mes = cbMes.getValue();
+            int anio = Integer.parseInt(tfAnio.getText());
+
+            // 00022423 Definir el rango de años válidos
+            int anioMinimo = 1900;
+            int anioMaximo = 2100;
+
+            // 00022423 Verificar que se hayan seleccionado mes y año válidos
+            if (mes != null && !mes.isEmpty() && anio >= anioMinimo && anio <= anioMaximo) {
+                // 00022423 Convertir el mes en índice (1-12)
+                int mesIndex = cbMes.getItems().indexOf(mes) + 1;
+                // 00022423 Obtener el total de gasto del cliente para el mes y año seleccionados
+                double totalGasto = Queries.getInstance().generarReporteB(clienteID, anio, mesIndex);
+                // 00022424 Mostrar el resultado en el TextArea
+                taMuestraReporte.setText("El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: " + totalGasto);
+            } else {
+                // 00022423 Mostrar una alerta si los datos no son válidos
+                mostrarAlerta("Entrada Inválida", "Por favor, seleccione un mes y un año válidos entre " + anioMinimo + " y " + anioMaximo + ".");
+            }
+
+        } catch (NumberFormatException e) {
+            // 00022423 Mostrar una alerta si los datos no son válidos (formato de número)
+            mostrarAlerta("Entrada Inválida", "Por favor, ingrese un ID de cliente y un año válidos.");
+        } catch (Exception e) {
+            // 00022423 Mostrar una alerta si ocurre un error al generar el reporte
+            mostrarAlerta("Error", "Ocurrió un error al generar el reporte: " + e.getMessage());
+        }
+    }
+
+
+
+    // 00022423 Método para mostrar una alerta con un título y mensaje específicos
+    private void mostrarAlerta(String titulo, String mensaje) {
+        // 00022423 Crear una nueva alerta de tipo ERROR
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        // 00022423 Establecer el título de la alerta con el valor pasado como parámetro
+        alerta.setTitle(titulo);
+        // 00022423 Establecer el encabezado de la alerta como null para no mostrar ningún encabezado
+        alerta.setHeaderText(null);
+        // 00022423 Establecer el contenido de la alerta con el mensaje pasado como parámetro
+        alerta.setContentText(mensaje);
+        // 00022423 Mostrar la alerta y esperar hasta que el usuario la cierre
+        alerta.showAndWait();
     }
 
     public void handleBtnConsultar(){ //00042823 Se define la función que se realizará cuando se haga una acción con btnGenerarReporte
@@ -118,8 +194,10 @@ public class BancoController {
 
                 System.out.println(text);
             }
-        }
-        else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
+        } else if (tabReporteB.isSelected()) {
+            mostrarReporteB();
+
+        } else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
 
             if(cmbFacilitador.getValue() != null){ //00042823 Si hay una opción selecciona por cmbFacilitador...
                 String text = ""; //00042823 Es una cadena vacía que tiene como propósito concatenar el contenido completo del reporte D
@@ -138,7 +216,7 @@ public class BancoController {
                             );
                         } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
                             flag = false; //00042823 Baja la bandera
-                            DriverManager.getConnection("jdbc:mysql://localhost:3306/dbBCN", "gabo7", "Afb092ebbf$").close(); //00042823 Y cierra la conexión con la base de datos, esto de una manera poco ortodoxa
+                            DriverManager.getConnection("jdbc:mysql://localhost/dbBCN", "root", "Mrdl2005").close(); //00042823 Y cierra la conexión con la base de datos, esto de una manera poco ortodoxa
                         }
                     }
                     taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes

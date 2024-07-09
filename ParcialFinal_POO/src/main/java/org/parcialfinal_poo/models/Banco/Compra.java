@@ -2,12 +2,6 @@ package org.parcialfinal_poo.models.Banco;
 
 import java.sql.Date;
 
-/*
-@NoArgsConstructor //00021223 constructor de la clase sin parametros
-@AllArgsConstructor //00021223 constructor de la clase que recibe todos los campos como parametros
-@Getter //00021223 se declaran todos los metodos getters de cada campo
-@Setter //00021223 se declaran todos los metodos setters de cada campo
-*/
 
 public class Compra {
 

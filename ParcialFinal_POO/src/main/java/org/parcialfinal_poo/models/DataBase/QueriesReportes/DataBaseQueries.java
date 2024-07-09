@@ -18,9 +18,12 @@ public abstract class DataBaseQueries extends DataBase {
                     where c.fechaCompra between ? and ?"""; //00021223 retorna la query para consultar un reporte A
         } else if(query == 2) { //00021223 se verifica si la query requerida es para el reporte B
             return """
-                    select sum(c.monto) from Compra c inner join Tarjeta t on t.id = c.tarjetaID
-                    inner join Cliente on t.clienteID = Cliente.?\s
-                    where year(c.fechaCompra) = year(?) and month(c.fechaCompra) = month(?)"""; //00021223 retorna la query para consultar un reporte B
+                    select sum(c.monto) 
+                    from Compra c 
+                    inner join Tarjeta t on t.id = c.tarjetaID
+                    inner join Cliente cl on t.clienteID = cl.id 
+                    where cl.id = ? and year(c.fechaCompra) = ? and month(c.fechaCompra) = ?;
+                   """; //00021223 retorna la query para consultar un reporte B
         } else if(query == 3) { //00021223 se verifica si la query requerida es para el reporte C
             return "select numTarjeta from Tarjeta \n" +
                     "where tipo like '?' and ClienteID = ?"; //00021223 retorna la query para consultar el reporte C
@@ -41,7 +44,7 @@ public abstract class DataBaseQueries extends DataBase {
 
     public abstract ArrayList<Compra> generarReporteA(int clienteID, Date fecha1, Date fecha2);
 
-    public abstract double generarReporteB(int clienteID, Date fecha);
+    public abstract double generarReporteB(int clienteID, int year,int month);
 
     public abstract void generarReporteC(int clienteID, ArrayList<String> tarjetasCredito, ArrayList<String> tarjetasDebito);
 
