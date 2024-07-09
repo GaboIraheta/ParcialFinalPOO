@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
+import org.parcialfinal_poo.models.DataBase.DataBase;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.*;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import static java.sql.DriverManager.getConnection;
 
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
+import org.parcialfinal_poo.models.TextFiles.TextFiles;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -34,9 +36,6 @@ public class BancoController {
 
     @FXML
     private Tab tabReporteC = new Tab(); //00088023 Objeto tab para verificación
-
-    @FXML
-    private Button btnGenerarReporte;
 
     @FXML
     private ComboBox<Facilitador> cmbFacilitador = new ComboBox<>(); //00042823 Crea un ComboBox que servirá para elegir el tipo de facilitador de la tarjeta para el reporte D
@@ -134,6 +133,7 @@ public class BancoController {
             }
 
             taMuestraReporte.setText(text);
+            TextFiles.createFile('A',text); //TODO: comentar
         }
     }
 
@@ -155,7 +155,11 @@ public class BancoController {
                 // 00022423 Obtener el total de gasto del cliente para el mes y año seleccionados
                 double totalGasto = Queries.getInstance().generarReporteB(clienteID, anio, mesIndex);
                 // 00022424 Mostrar el resultado en el TextArea
-                taMuestraReporte.setText("El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: $" + totalGasto);
+
+                String text = "El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: $" + totalGasto;
+
+                taMuestraReporte.setText(text);
+                TextFiles.createFile('B',text); //TODO: comentar
             } else {
                 // 00022423 Mostrar una alerta si los datos no son válidos
                 mostrarAlerta("Entrada Inválida", "Por favor, seleccione un mes y un año válidos entre " + anioMinimo + " y " + anioMaximo + ".");
@@ -197,6 +201,7 @@ public class BancoController {
             }
 
             taMuestraReporte.setText(text);//00088023 Muestra el texto en el TextArea
+            TextFiles.createFile('C',text); //TODO: comentar
 
         } catch (Exception e) {
             mostrarAlerta("Error", "Ingrese un valor válido");//00088023 Este error se recibe por el parseInteger, por lo tanto el usuario ingreso un valor no válido
@@ -221,10 +226,14 @@ public class BancoController {
                         );
                     } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
                         flag = false; //00042823 Baja la bandera
-                        DriverManager.getConnection("jdbc:mysql://localhost/dbBCN", "gabo7", "Afb092ebbf$").close(); //00042823 Y cierra la conexión con la base de datos, esto de una manera poco ortodoxa
+
+                        DataBase dataBase = new DataBase() {}; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
+                        dataBase.getConnection().close(); //00042823 Se cierra la conexión, que quedaba abierta por usar el ResultSet
                     }
                 }
                 taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes
+                TextFiles.createFile('D',text); //TODO: comentar
+
             } catch (SQLException e) { //00042823 Si algo malo ocurre, entonces atrapa la excepción...
                 e.printStackTrace(); //00042823 ... Para luego imprimir la cadena de errores de la excepción
             }

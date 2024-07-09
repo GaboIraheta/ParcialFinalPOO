@@ -138,7 +138,6 @@ public class Queries extends DataBaseQueries {
                 }
             }
         }
-
     }
 
     public ResultSet generarReporteD(Facilitador facilitador) { //00042823 General el resultSet del reporte D, que se usará directamente en el GUI
