@@ -3,6 +3,7 @@ package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 import org.parcialfinal_poo.models.Banco.Compra;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -33,7 +34,11 @@ public class Queries extends DataBaseQueries {
             connection = getConnection(); //00021223 se establece la conexion a la base de datos por medio del
             //metodo estatico getConnection
 
-            Statement statement = connection.createStatement(); //00021223 se crea el statement para poder ejecutar la consulta
+            PreparedStatement statement = connection.prepareStatement(DataBaseQueries.getReportQuery(1)); //00088023 Se crea el prepared statement para prepararlo para su ejecución
+            statement.setDate(1, fecha1);//00088023 Se ajusta el primer parámetro de la query
+            statement.setDate(2, fecha2);//00088023 Se ajusta el segundo parámetro de la query
+            statement.setInt(3, clienteID);//00088023 Se ajusta el tercer parámetro de la query
+
 
             resultSet = statement.executeQuery(DataBaseQueries.getReportQuery(1)); //00021223 se ejecuta la query requerida
             //y se guarda el resultado en un objeto ResultSet para poder acceder y manipular los datos obtenidos

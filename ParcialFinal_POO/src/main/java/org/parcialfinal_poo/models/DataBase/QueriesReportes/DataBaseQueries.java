@@ -14,7 +14,7 @@ public abstract class DataBaseQueries extends DataBase {
             return """
                     select c.* from Compra c inner join Tarjeta t on t.id = c.tarjetaID
                     inner join Cliente on t.ClienteID = Cliente.?\s
-                    where c.fechaCompra between ? and ?"""; //00021223 retorna la query para consultar un reporte A
+                    where c.fechaCompra between ? and ? and t.ClienteID = ?"""; //00021223 retorna la query para consultar un reporte A
         } else if(query == 2) { //00021223 se verifica si la query requerida es para el reporte B
             return """
                     select sum(c.monto) from Compra c inner join Tarjeta t on t.id = c.tarjetaID
