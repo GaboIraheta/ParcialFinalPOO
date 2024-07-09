@@ -1,10 +1,9 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
 import org.parcialfinal_poo.models.Banco.Compra;
+import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 
-import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Queries extends DataBaseQueries {
@@ -73,5 +72,21 @@ public class Queries extends DataBaseQueries {
     @Override
     public ArrayList<String> generarReporteC(int clienteID) {
         return null;
+    }
+
+    public ResultSet generarReporteD(Facilitador facilitador) { //00042823 General el resultSet del reporte D, que se usará directamente en el GUI
+        try { //00042823 Para capturar errores que ocurran respecto a la conexión con la base de datos
+            connection = getConnection(); //00042823 Se abre la conexión con la base de datos
+
+            PreparedStatement preparedStatement = connection.prepareStatement(DataBaseQueries.getReportQuery(4)); //00042823 Crea una forma segura de agregar parámetros a las consultas, siendo la consulta la necesaria para el reporte D
+            preparedStatement.setString(1, facilitador.toString()); //00042823 De manera segura se agrega el parámetro como atributo de un objeto, esto en el primer (y único) parámetro para la consulta
+
+            return preparedStatement.executeQuery(); //00042823 El método devuelve un objeto ResultSet, el cual es el valor de la función. Esto para luego obtener datos y usarlos directamente
+        }
+        catch (SQLException e){ //00042823 Si llegara a haber algún tipo de error en la conexión o en lógica de la consulta...
+            e.printStackTrace(); //00042823 ... Se imprime la cadena de excepciones que produjo el error
+            return null; //00042823 Estoy forzado a devolver algo, así que si algo sale mal, la función devuelve nulo (rompemos el programa de todas formas)
+        }
+
     }
 }

@@ -26,5 +26,4 @@ public class TextFiles { //00088023 Se define la clase donde se trabajara con lo
             alert.showAndWait();//00088023 Se muestra la alerta y espera a que la cierren
         }
     }
-
 }
