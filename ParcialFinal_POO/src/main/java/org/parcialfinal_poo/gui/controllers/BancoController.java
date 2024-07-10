@@ -10,6 +10,7 @@ import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
 import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 import org.parcialfinal_poo.models.DataBase.DataBase;
+import org.parcialfinal_poo.models.DataBase.Deletes.Delete;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.*;
@@ -80,6 +81,11 @@ public class BancoController {
     private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
 
     @FXML
+    private TextField txtIdClienteEliminar, txtIdTarjetaEliminar, txtIdCompraEliminar; //00022423 id necesarios para la operación delete
+    @FXML
+    private Button btnEliminarCliente, btnEliminarTarjeta, btnEliminarCompra; //00022423 id necesarios para conectar los botones con la operación delete
+
+    @FXML
     private Label campoObligatorioUpdateCliente1, campoObligatorioUpdateCliente2, campoObligatorioUpdateCliente3, campoObligatorioUpdateCliente4, campoObligatorioUpdateCliente5;
     //00021223 se rereferencian todos los labels de campos obligatorios en la pestaña de ctualizar de la pestaña clientes
 
@@ -100,7 +106,7 @@ public class BancoController {
 
     @FXML
     private Label campoObligatorioUpdateTarjeta1, campoObligatorioUpdateTarjeta2, campoObligatorioUpdateTarjeta3, campoObligatorioUpdateTarjeta4,
-    campoObligatorioUpdateTarjeta5, campoObligatorioUpdateTarjeta6; //00021223 referencia a los labels de control de seleccion en actualizar registros de tarjetas
+            campoObligatorioUpdateTarjeta5, campoObligatorioUpdateTarjeta6; //00021223 referencia a los labels de control de seleccion en actualizar registros de tarjetas
 
     @FXML
     private Button btnActualizarRegistroCliente; //00021223 referencia al boton de actualizar registros de la pestaña de actualizar de clientes
@@ -155,7 +161,8 @@ public class BancoController {
         campoObligatorioUpdateCompra5.setVisible(false);
 
         tabPaneClientes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == tabUpdateClientes) {
+            //00021223 configuracion del tabPane de Clientes para desactivar ciertos componentes de la tab de actualizar clientes
+            if (newValue == tabUpdateClientes) {
                 tfNombresCliente.setDisable(true); //00021223 todos los texfield de campos son desactivados para que no se puedan utilizar mientras no seleccione un ID de cliente a actualizar
                 tfApellidosClientes.setDisable(true);
                 tfDireccionClientes.setDisable(true);
@@ -165,37 +172,60 @@ public class BancoController {
         });
 
         tabPaneTarjetas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == tabUpdateTarjetas) {
-                tfNumeroTarjeta.setDisable(true);
+            //00021223 configuracion del tabPane de tarjetas para desactivar ciertos componentes de la tab de actualizar tarjetas
+            if (newValue == tabUpdateTarjetas) {
+                tfNumeroTarjeta.setDisable(true); //00021223 todos los componenetes de campos son desactivados para que no se puedan utilizar mientras no seleccione un ID de tarjeta
                 tfIDCliente.setDisable(true);
                 dpFechaExpiracion.setDisable(true);
                 cbFacilitador.setDisable(true);
                 cbTipoTarjeta.setDisable(true);
-                btnActualizarTarjeta.setDisable(true);
+                btnActualizarTarjeta.setDisable(true); //00021223 tambien se desactiva el boton de actualizar el registro
             }
         });
 
         tabPaneCompras.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == tabUpdateCompras) {
-                tfIDTarjeta.setDisable(true);
+            //00021223 configuracion del tabPane de Compras para desactivar ciertos componentes de la tab de actualizar compras
+            if (newValue == tabUpdateCompras) {
+                tfIDTarjeta.setDisable(true); //00021223 todos los componenetes de campos son desactivados para que no se puedan utilizar mientras no seleccione un ID de compra
                 tfMonto.setDisable(true);
                 tfConcepto.setDisable(true);
                 dpFechaCompra.setDisable(true);
-                btnActualizarCompra.setDisable(true);
+                btnActualizarCompra.setDisable(true);  //00021223 tambien se desactiva el boton de actualizar el registro
             }
         });
 
 
-        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress);
+        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress); //00021223 se cargan los items del combobox
         ObservableList<Facilitador> facilitadores = FXCollections.observableArrayList(cmbFacilitador.getItems()); //00042823 Se crea una lista observable con el único propósito de agregar opciones a cmbFacilitador
         cmbFacilitador.setItems(facilitadores); //00042823 Se definen las opciones de cmbFacilitadores por medio de la lista observable
-
-        // 00022423 Asignar una acción al botón btnConsultar
 
         //00022423 Llenar el ChoiceBox cbMes con los nombres de los meses
         cbMes.setItems(FXCollections.observableArrayList("enero",
                 "febrero", "marzo", "abril", "mayo", "junio", "agosto",
                 "septiembre", "octubre", "noviembre", "diciembre"));
+
+
+    }
+
+    // 00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar un cliente
+    @FXML
+    private void eliminarCliente() {
+        //00022423  Llama al método eliminarRegistro con el parámetro "Cliente" para indicar que se va a eliminar un cliente
+        eliminarRegistro("Cliente");
+    }
+
+    @FXML
+    //00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar una tarjeta
+    private void eliminarTarjeta() {
+        //00022423 Llama al método eliminarRegistro con el parámetro "Tarjeta" para indicar que se va a eliminar una tarjeta
+        eliminarRegistro("Tarjeta");
+    }
+
+    //00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar una compra
+    @FXML
+    private void eliminarCompra() {
+        //00022423 Llama al método eliminarRegistro con el parámetro "Compra" para indicar que se va a eliminar una compra
+        eliminarRegistro("Compra");
     }
 
     private void mostrarReporteA() { //00021223 metodo que se encarga de mostrar el reporte A
@@ -236,7 +266,7 @@ public class BancoController {
             }
 
             taMuestraReporte.setText(text); //00021223 settea el texto del textarea para mostrar el resultado de la consulta
-            TextFiles.createFile('A',text); //00021223 genera el reporte de la consulta utilizando el metodo createFile, se le pasa un char que indica el reporte y el texto que es la consulta completa
+            TextFiles.createFile('A', text); //00021223 genera el reporte de la consulta utilizando el metodo createFile, se le pasa un char que indica el reporte y el texto que es la consulta completa
         }
     }
 
@@ -262,7 +292,7 @@ public class BancoController {
                 String text = "El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: $" + totalGasto;
 
                 taMuestraReporte.setText(text);
-                TextFiles.createFile('B',text); //TODO: comentar
+                TextFiles.createFile('B', text); //TODO: comentar
             } else {
                 // 00022423 Mostrar una alerta si los datos no son válidos
                 mostrarAlerta("Entrada Inválida", "Por favor, seleccione un mes y un año válidos entre " + anioMinimo + " y " + anioMaximo + ".");
@@ -304,7 +334,7 @@ public class BancoController {
             }
 
             taMuestraReporte.setText(text);//00088023 Muestra el texto en el TextArea
-            TextFiles.createFile('C',text); //TODO: comentar
+            TextFiles.createFile('C', text); //TODO: comentar
 
         } catch (Exception e) {
             mostrarAlerta("Error", "Ingrese un valor válido");//00088023 Este error se recibe por el parseInteger, por lo tanto el usuario ingreso un valor no válido
@@ -330,12 +360,13 @@ public class BancoController {
                     } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
                         flag = false; //00042823 Baja la bandera
 
-                        DataBase dataBase = new DataBase() {}; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
+                        DataBase dataBase = new DataBase() {
+                        }; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
                         dataBase.getConnection().close(); //00042823 Se cierra la conexión, que quedaba abierta por usar el ResultSet
                     }
                 }
                 taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes
-                TextFiles.createFile('D',text); //TODO: comentar
+                TextFiles.createFile('D', text); //TODO: comentar
 
             } catch (SQLException e) { //00042823 Si algo malo ocurre, entonces atrapa la excepción...
                 e.printStackTrace(); //00042823 ... Para luego imprimir la cadena de errores de la excepción
@@ -347,7 +378,7 @@ public class BancoController {
     }
 
     // 00022423 Método para mostrar una alerta con un título y mensaje específicos
-    private void mostrarAlerta(String titulo, String mensaje) {
+    public void mostrarAlerta(String titulo, String mensaje) {
         // 00022423 Crear una nueva alerta de tipo ERROR
         Alert alerta = new Alert(Alert.AlertType.ERROR);
         // 00022423 Establecer el título de la alerta con el valor pasado como parámetro
@@ -361,14 +392,14 @@ public class BancoController {
     }
 
     public void handleBtnConsultar() { //00042823 Se define la función que se realizará cuando se haga una acción con btnGenerarReporte
-        if (tabReporteA.isSelected()) { //00021223 se valida si la pestaña de reporte A esta seleccionada para que el boton consultar realice la consulta de acuerdo a los requerimientos del reporte A
+        if (tabReporteA.isSelected()) { //00021223 se valida si la tab del reporte A esta seleccionada
             mostrarReporteA(); //00021223 se muestra el reporte A
-        } else if (tabReporteB.isSelected()) {
-            mostrarReporteB();
-        } else if (tabReporteC.isSelected()) {
-            mostrarReporteC();
+        } else if (tabReporteB.isSelected()) { //00022423 Si la pestaña para el reporte B se encuentra activa
+            mostrarReporteB(); //00021223 se muestra el reporte B
+        } else if (tabReporteC.isSelected()) { //00021223 se valida si la tab del reporte C esta seleccionada
+            mostrarReporteC(); //00021223 se muestra el reporte C
         } else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
-            mostrarReporteD();
+            mostrarReporteD(); //00021223 se muestra el reporte D
         }
     }
 
@@ -378,25 +409,25 @@ public class BancoController {
 
         boolean flag = false; //00021223 se inicializa abajo una bandera
 
-        if(tfClienteID.getText().isEmpty()) { //00021223 valida si el textfield de clienteID esta vacio
+        if (tfClienteID.getText().isEmpty()) { //00021223 valida si el textfield de clienteID esta vacio
             campoObligatorioUpdateCliente1.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de clienteID
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(!flag) { //00021223 valida si la bandera esta abajo
+        if (!flag) { //00021223 valida si la bandera esta abajo
 
-            Cliente cliente = Select.getInstance().selectCliente().get(Integer.parseInt(tfClienteID.getText()) - 1);
+            Cliente cliente = Select.getInstance().selectCliente().get(Integer.parseInt(tfClienteID.getText()) - 1); //00021223 se obtiene el cliente que se ha seleccionado
 
-                    tfNombresCliente.setDisable(false); //00021223 si coincide activa de nuevo todos los textfield de campos
-                    tfApellidosClientes.setDisable(false);
-                    tfDireccionClientes.setDisable(false);
-                    tfTelefonoClientes.setDisable(false);
-                    btnActualizarRegistroCliente.setDisable(false); //00021223 activa tambien el boton de actualizar registro de cliente
+            tfNombresCliente.setDisable(false); //00021223 si coincide activa de nuevo todos los textfield de campos
+            tfApellidosClientes.setDisable(false);
+            tfDireccionClientes.setDisable(false);
+            tfTelefonoClientes.setDisable(false);
+            btnActualizarRegistroCliente.setDisable(false); //00021223 activa tambien el boton de actualizar registro de cliente
 
-                    tfNombresCliente.setPromptText(cliente.getNombres()); //00021223 settea un prompt para el textfield de nombres con el nombre del cliente seleccionado
-                    tfApellidosClientes.setPromptText(cliente.getApellidos()); //00021223 settea un prompt para el textfield de apellidos con el apellido del cliente seleccionado
-                    tfDireccionClientes.setPromptText(cliente.getDireccion()); //00021223 settea un prompt para el textfield de direccion con la direccion del cliente seleccionado
-                    tfTelefonoClientes.setPromptText(cliente.getTelefono()); //00021223 settea un prompt para el textfield de telefono con el telefono del cliente seleccionado
+            tfNombresCliente.setPromptText(cliente.getNombres()); //00021223 settea un prompt para el textfield de nombres con el nombre del cliente seleccionado
+            tfApellidosClientes.setPromptText(cliente.getApellidos()); //00021223 settea un prompt para el textfield de apellidos con el apellido del cliente seleccionado
+            tfDireccionClientes.setPromptText(cliente.getDireccion()); //00021223 settea un prompt para el textfield de direccion con la direccion del cliente seleccionado
+            tfTelefonoClientes.setPromptText(cliente.getTelefono()); //00021223 settea un prompt para el textfield de telefono con el telefono del cliente seleccionado
         }
     }
 
@@ -408,27 +439,27 @@ public class BancoController {
 
         boolean flag = false; //00021223 se inicializa una bandera abjo
 
-        if(tfNombresCliente.getText().isEmpty()) { //00021223 se valida si el textfield de nombres esta vacio
+        if (tfNombresCliente.getText().isEmpty()) { //00021223 se valida si el textfield de nombres esta vacio
             campoObligatorioUpdateCliente2.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de nombres
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfApellidosClientes.getText().isEmpty()) { //00021223 se valida si el textfield de apellidos esta vacio
+        if (tfApellidosClientes.getText().isEmpty()) { //00021223 se valida si el textfield de apellidos esta vacio
             campoObligatorioUpdateCliente3.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de apellidos
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfDireccionClientes.getText().isEmpty()) { //00021223 se valida si el textfield de direccion esta vacio
+        if (tfDireccionClientes.getText().isEmpty()) { //00021223 se valida si el textfield de direccion esta vacio
             campoObligatorioUpdateCliente4.setVisible(true); //00021223 se hace visible el control de seleccion de direccion
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfTelefonoClientes.getText().isEmpty()) { //00021223 se valida si el textfield de telefonos esta vacio
+        if (tfTelefonoClientes.getText().isEmpty()) { //00021223 se valida si el textfield de telefonos esta vacio
             campoObligatorioUpdateCliente5.setVisible(true); //00021223 se hace visible el control de seleccion de telefonos
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(!flag) { //00021223 se valida si la bandera esta abajo
+        if (!flag) { //00021223 se valida si la bandera esta abajo
 
             Update.getInstance().updateCliente(tfNombresCliente.getText(), tfApellidosClientes.getText(), tfDireccionClientes.getText(),
                     tfTelefonoClientes.getText(), Integer.parseInt(tfClienteID.getText())); //00021223 se llama al metodo de updateCliente
@@ -441,13 +472,13 @@ public class BancoController {
             tfDireccionClientes.setText("");
             tfTelefonoClientes.setText("");
 
-            tfClienteID.setPromptText("");
+            tfClienteID.setPromptText(""); //00021223 se settean todos los prompts
             tfNombresCliente.setPromptText("");
             tfApellidosClientes.setPromptText("");
             tfDireccionClientes.setPromptText("");
             tfTelefonoClientes.setPromptText("");
 
-            tfNombresCliente.setDisable(true);
+            tfNombresCliente.setDisable(true); //00021223 se desactivan de nuevo todos los componentes
             tfApellidosClientes.setDisable(true);
             tfDireccionClientes.setDisable(true);
             tfTelefonoClientes.setDisable(true);
@@ -461,16 +492,16 @@ public class BancoController {
 
         boolean flag = false; //00021223 se inicializa abajo una bandera
 
-        if(tfTarjetaID.getText().isEmpty()) { //00021223 valida si el textfield de tarjetaID esta vacio
+        if (tfTarjetaID.getText().isEmpty()) { //00021223 valida si el textfield de tarjetaID esta vacio
             campoObligatorioUpdateTarjeta1.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de tarjetaID
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(!flag) { //00021223 valida si la bandera esta abajo
+        if (!flag) { //00021223 valida si la bandera esta abajo
 
             try {
 
-                Tarjeta tarjeta = Select.getInstance().selectTarjeta().get(Integer.parseInt(tfTarjetaID.getText()) - 1);
+                Tarjeta tarjeta = Select.getInstance().selectTarjeta().get(Integer.parseInt(tfTarjetaID.getText()) - 1); //00021223 se obtiene la tarjeta que se ha seleccionado por el ID
 
                 tfNumeroTarjeta.setDisable(false); //00021223 se activan el textfield de numero tarjeta
                 tfIDCliente.setDisable(false); //00021223 se activa el textield de clienteID
@@ -512,46 +543,46 @@ public class BancoController {
 
         boolean flag = false; //00021223 se inicializa una bandera abjo
 
-        if(tfNumeroTarjeta.getText().isEmpty()) { //00021223 se valida si el textfield de numero de tarjeta esta vacio
+        if (tfNumeroTarjeta.getText().isEmpty()) { //00021223 se valida si el textfield de numero de tarjeta esta vacio
             campoObligatorioUpdateTarjeta2.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de numero tarjeta
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(cbTipoTarjeta.getValue() == null) { //00021223 se valida si el combobox de tipo no ha sido seleccionado
+        if (cbTipoTarjeta.getValue() == null) { //00021223 se valida si el combobox de tipo no ha sido seleccionado
             campoObligatorioUpdateTarjeta3.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de tipos
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(dpFechaExpiracion.getValue() == null) { //00021223 se valida si el datepicker de fecha de expiracion esta vacio
+        if (dpFechaExpiracion.getValue() == null) { //00021223 se valida si el datepicker de fecha de expiracion esta vacio
             campoObligatorioUpdateTarjeta4.setVisible(true); //00021223 se hace visible el control de seleccion de fecha de expiracion
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(cbFacilitador.getValue() == null) { //00021223 se valida si el combobox de facilitadores esta vacio
+        if (cbFacilitador.getValue() == null) { //00021223 se valida si el combobox de facilitadores esta vacio
             campoObligatorioUpdateTarjeta5.setVisible(true); //00021223 se hace visible el control de seleccion de facilitadores
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfIDCliente.getText().isEmpty()) { //00021223 se valida si el combobox de IDcliente esta vacio
+        if (tfIDCliente.getText().isEmpty()) { //00021223 se valida si el combobox de IDcliente esta vacio
             campoObligatorioUpdateTarjeta6.setVisible(true); //00021223 si esta vacio se hace visible el control de seleccion de IDcliente
             flag = true; //00021223 se levanta la bandera
         }
 
-        if(!flag) {
+        if (!flag) {
 
             Update.getInstance().updateTarjeta(tfNumeroTarjeta.getText(), Date.valueOf(dpFechaExpiracion.getValue().toString()), cbTipoTarjeta.getValue(),
                     cbFacilitador.getValue(), Integer.parseInt(tfIDCliente.getText()), Integer.parseInt(tfTarjetaID.getText())); //00021223 se llama al metodo de updateTarjeta
             //para ejecutar la query de update tarjeta en la base de datos, se le pasa cada uno de los valores nuevos de cada campo y el ID
             //de la tarjeta que se debe actualizar
 
-            tfTarjetaID.setText("");
+            tfTarjetaID.setText(""); //00021223 se settean los text y prompts de los componentes
             tfNumeroTarjeta.setText("");
             tfIDCliente.setText("");
             cbTipoTarjeta.setPromptText("");
             cbFacilitador.setPromptText("");
             dpFechaExpiracion.setPromptText("");
 
-            tfNumeroTarjeta.setDisable(true);
+            tfNumeroTarjeta.setDisable(true); //00021223 se desactivan de nuevo todos los componentes
             tfIDCliente.setDisable(true);
             dpFechaExpiracion.setDisable(true);
             cbFacilitador.setDisable(true);
@@ -561,80 +592,145 @@ public class BancoController {
     }
 
     @FXML
-    public void seleccionarCompra() {
+    public void seleccionarCompra() { //00021223 metodo para seleccionar un registro de compra
 
-        campoObligatorioUpdateCompra1.setVisible(false);
+        campoObligatorioUpdateCompra1.setVisible(false); //00021223 se hace invisible el control de seleccion
 
-        boolean flag = false;
+        boolean flag = false; //00021223 inicializa una bandera abajo
 
-        if(tfCompraID.getText().isEmpty()) {
-            campoObligatorioUpdateCompra1.setVisible(true);
-            flag = true;
+        if (tfCompraID.getText().isEmpty()) { //00021223 se valida si el ID de compra esta vacio
+            campoObligatorioUpdateCompra1.setVisible(true); //00021223 se hace visible el control de seleccion
+            flag = true; //00021223 se sube la bandera
         }
 
-        if(!flag) {
+        if (!flag) { //00021223 se valida si la bandera esta abajo
 
-            Compra compra = Select.getInstance().selectCompra().get(Integer.parseInt(tfCompraID.getText()) - 1);
+            Compra compra = Select.getInstance().selectCompra().get(Integer.parseInt(tfCompraID.getText()) - 1); //00021223 se obtiene el registro de compra seleccionado por el ID
 
-            dpFechaCompra.setDisable(false);
+            dpFechaCompra.setDisable(false); //00021223 se activan todos los componentes
             tfIDTarjeta.setDisable(false);
             tfMonto.setDisable(false);
             tfConcepto.setDisable(false);
-            btnActualizarCompra.setDisable(false);
+            btnActualizarCompra.setDisable(false); //00021223 tambien se activa el boton
 
-            dpFechaCompra.setPromptText(compra.getFechaCompra().toString());
+            dpFechaCompra.setPromptText(compra.getFechaCompra().toString()); //00021223 se settea un prompt para todos los componentes con los datos del registro seleccionado
             tfMonto.setPromptText(String.valueOf(compra.getMonto()));
             tfConcepto.setPromptText(compra.getDescripcion());
             tfIDTarjeta.setPromptText(String.valueOf(compra.getTarjetaID()));
 
         }
     }
-
+    
     @FXML
-    public void actualizarRegistroCompra() {
-
-        campoObligatorioUpdate2.setVisible(false);
+    public void actualizarRegistroCompra() { //00021223 metodo que se encarga de actualizar un registro de compra
+        campoObligatorioUpdate2.setVisible(false); //00021223 se hacen invisible los control de seleccion
         campoObligatorioUpdateCompra3.setVisible(false);
         campoObligatorioUpdateCompra4.setVisible(false);
         campoObligatorioUpdateCompra5.setVisible(false);
 
-        boolean flag = false;
+        boolean flag = false; //00021223 inicializa una bandera abajo
 
-        if(dpFechaCompra.getValue() == null) {
-            campoObligatorioUpdate2.setVisible(true);
-            flag = true;
+        if (dpFechaCompra.getValue() == null) { //00021223 se valida si la fecha de compra es vacia
+            campoObligatorioUpdate2.setVisible(true); //00021224 se hace visible el control de seleccion
+            flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfConcepto.getText().isEmpty()) {
-            campoObligatorioUpdateCompra3.setVisible(true);
-            flag = true;
+        if (tfConcepto.getText().isEmpty()) { //00021223 se valida si el concepto es vacio
+            campoObligatorioUpdateCompra3.setVisible(true); //00021223 se hace visible el control de seleccion
+            flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfMonto.getText().isEmpty()) {
-            campoObligatorioUpdateCompra4.setVisible(true);
-            flag = true;
+        if (tfMonto.getText().isEmpty()) { //00021223 se valida si el monto es vacio
+            campoObligatorioUpdateCompra4.setVisible(true); //00021223 se hace visible el control de seleccion
+            flag = true; //00021223 se levanta la bandera
         }
 
-        if(tfIDTarjeta.getText().isEmpty()) {
-            campoObligatorioUpdateCompra5.setVisible(true);
-            flag = true;
+        if (tfIDTarjeta.getText().isEmpty()) { //00021223 se valida si el ID de tarjeta es vacio
+            campoObligatorioUpdateCompra5.setVisible(true); //00021223 se hace visible el control de seleccion
+            flag = true; //00021223 se levanta la bandera
         }
 
-        if(!flag) {
+        if (!flag) { //00021223 se valida si la bandera esta arriba
 
             Update.getInstance().updateCompra(Date.valueOf(dpFechaCompra.getValue().toString()), Double.parseDouble(tfMonto.getText()),
                     tfConcepto.getText(), Integer.parseInt(tfIDTarjeta.getText()), Integer.parseInt(tfCompraID.getText()));
+            //00021223 se ejecuta la query para actualizar un registro de compra pasandole como paramtros los campos requeridos
 
-            tfMonto.setText("");
+            tfMonto.setText(""); //00021223 se settean los textos en vacio
             tfConcepto.setText("");
             tfIDTarjeta.setText("");
             tfCompraID.setText("");
             dpFechaCompra.setPromptText("");
 
-            tfMonto.setDisable(true);
+            tfMonto.setDisable(true); //00021223 se desactivan de nuevo todos los componentes
             tfConcepto.setDisable(true);
             tfIDTarjeta.setDisable(true);
             dpFechaCompra.setDisable(true);
+        }
+
+    }
+
+
+    //00022423 Método para eliminar registro de la base de datos
+    private void eliminarRegistro(String tipo) {
+        try {
+            // 00022423 Declaración de la variable para almacenar el ID del registro
+            int id;
+            // 00022423 Variable para indicar si la eliminación fue exitosa o no
+            boolean exito = false;
+            // 00022423 Estructura switch para determinar el tipo de registro a eliminar
+            switch (tipo) {
+                case "Cliente":
+                    // 00022423 Obtiene el ID del cliente desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdClienteEliminar.getText());
+                    // 000224234 Llama al método deleteCliente de la instancia de Delete para eliminar el cliente
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito = Delete.getInstance().deleteCliente(id);
+                    break;
+                case "Tarjeta":
+                    // 00022423 Obtiene el ID de la tarjeta desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdTarjetaEliminar.getText());
+                    // 00022423 Llama al método deleteTarjeta de la instancia de Delete para eliminar la tarjeta
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito = Delete.getInstance().deleteTarjeta(id);
+                    break;
+                case "Compra":
+                    // 00022423 Obtiene el ID de la compra desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdCompraEliminar.getText());
+                    // 00022423 Llama al método deleteCompra de la instancia de Delete para eliminar la compra
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito = Delete.getInstance().deleteCompra(id);
+                    break;
+            }
+
+            if (exito) { // 00022423 Si la eliminación fue exitosa, muestra un mensaje de éxito
+                // 00022423 Crea una alerta de tipo información
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                //00022423 Establece el título de la alerta
+                alerta.setTitle("Eliminado");
+                // 00022423 Establece el encabezado de la alerta como nulo para que no haya encabezado
+                alerta.setHeaderText(null);
+                // 00022423 Establece el contenido del mensaje de la alerta con el tipo de registro eliminado
+                alerta.setContentText("Se ha eliminado el registro exitosamente");
+                //00022423 Muestra la alerta y espera hasta que el usuario la cierre
+                alerta.showAndWait();
+            } else {
+                //00022423 Muestra una alerta indicando que no se puedo eliminar el registro
+                mostrarAlerta("Error", "No se pudo eliminar el registro.");
+            }
+        } catch (
+                NumberFormatException e) { // 00022423 Si se produce una excepción por formato de número (por ejemplo, si el ID no es un número válido)
+            // 00022423 Crea una alerta de tipo error
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            // 00022423 Establece el título de la alerta
+            alert.setTitle("Error");
+            // 00022423 Establece el encabezado de la alerta como nulo para que no haya encabezado
+            alert.setHeaderText(null);
+            // 00022423 Establece el contenido del mensaje de la alerta indicando que el ID no es válido
+            alert.setContentText("Error, ingrese un id valido");
+            // 00022423 Muestra la alerta y espera hasta que el usuario la cierre
+            alert.showAndWait();
+
         }
     }
 }
