@@ -225,14 +225,12 @@ public class BancoController {
         } catch (NumberFormatException e) { //00042823 Se atrapa la excepción, si ocurre
             if (tfIdClienteRB.getText().isEmpty()) { //00042823 Se verifica si el usuario llenó el campo
                 errorLabel4.setText("Campo obligatorio"); //00042823 El usuario no llenó el campo
-                errorLabel4.setVisible(true); //00042823 Se hace visible el label
-                flag = true; //00042823 Se levanta la bandera
             }
             else {
                 errorLabel4.setText("Ingrese un año válido"); //00042823 Establece el tipo de error
-                errorLabel4.setVisible(true); //00042823 Y se lo muestra al usuario
-                flag = true; //00042823 Se levanta la bandera
             }
+            errorLabel4.setVisible(true); //00042823 Se hace visible el label
+            flag = true; //00042823 Se levanta la bandera
         }
 
         if (mes == null) {//00042823 La única forma de que mes sea null es que no ha seleccionada nada
@@ -374,8 +372,8 @@ public class BancoController {
             }
 
         } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
-            errorLabel8.setText("Campo obligatorio");
-            errorLabel8.setVisible(true);
+            errorLabel8.setText("Campo obligatorio"); //00042823 Se establece el texto del error
+            errorLabel8.setVisible(true); //00042823 Se le hace ver al usuario su ineptitud para operar la interfaz
         }
     }
 
@@ -402,10 +400,7 @@ public class BancoController {
             mostrarReporteC();
         } else if (tabReporteD.isSelected()) { //00042823 Si la pestaña para el reporte D se encuentra activa
             mostrarReporteD();
-        } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
-            //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
         }
-
     }
 
     private void fillTablaClientes() { //Función para inicializar la tabla de clientes en la interfaz, un conjunto de ListViews que hacen de columnas
