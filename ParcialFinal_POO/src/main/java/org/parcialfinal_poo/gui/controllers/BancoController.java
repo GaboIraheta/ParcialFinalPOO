@@ -4,8 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.parcialfinal_poo.models.Banco.Cliente;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
+import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
+import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 import org.parcialfinal_poo.models.DataBase.DataBase;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import static java.sql.DriverManager.getConnection;
 
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
+import org.parcialfinal_poo.models.DataBase.Selects.Select;
 import org.parcialfinal_poo.models.TextFiles.TextFiles;
 
 import java.sql.Date;
@@ -41,20 +45,10 @@ public class BancoController {
     private ComboBox<Facilitador> cmbFacilitador = new ComboBox<>(); //00042823 Crea un ComboBox que servirá para elegir el tipo de facilitador de la tarjeta para el reporte D
 
     @FXML
-    private ComboBox<?> cmbTablaConsultada;
-
-    @FXML
     private DatePicker dpFechaInicial;
-    private DatePicker dpFechaFinalRA;
-
-    @FXML
-    private DatePicker dpFechaInicialRB;
 
     @FXML
     private DatePicker dpFechaFinal;
-
-    @FXML
-    private DatePicker dpFechaFinalRB;
 
     @FXML
     private TextField tfIdClienteRA;
@@ -75,6 +69,54 @@ public class BancoController {
     private TextArea taMuestraReporte;
 
     @FXML
+    private ListView<Integer> lvClienteID = new ListView<>(); //00042823 Crea un ListView para el ID del cliente
+
+    @FXML
+    private ListView<String> lvClienteNombres = new ListView<>(); //00042823 Crea un ListView para los nombres del cliente
+
+    @FXML
+    private ListView<String> lvClienteApellidos = new ListView<>(); //00042823 Crea un ListView para los apellidos del cliente
+
+    @FXML
+    private ListView<String> lvClienteDireccion = new ListView<>(); //00042823 Crea un ListView para la dirección del cliente
+
+    @FXML
+    private ListView<String> lvClienteNumTelefono = new ListView<>(); //00042823 Crea un ListView para el teléfono del cliente
+
+    @FXML
+    private ListView<Integer> lvTarjetaID = new ListView<>(); //00042823 Crea un ListView para el ID de la tarjeta
+
+    @FXML
+    private ListView<Integer> lvTarjetaClienteID = new ListView<>(); //00042823 Crea un ListView para el ID del cliente dueño de la tarjeta
+
+    @FXML
+    private ListView<String> lvTarjetaNum = new ListView<>(); //00042823 Crea un ListView para el número de la tarjeta, sin censura
+
+    @FXML
+    private ListView<Date> lvTarjetaFechaExp = new ListView<>(); //00042823 Crea un ListView para la fecha de expiración de la tarjeta
+
+    @FXML
+    private ListView<Facilitador> lvTarjetaFacilitador = new ListView<>(); //00042823 Crea un ListView para el facilitador de la tarjeta
+
+    @FXML
+    private ListView<TipoTarjeta> lvTarjetaTipo = new ListView<>(); //00042823 Crea un ListView para el tipo de la tarjeta (crédito o débito)
+
+    @FXML
+    private ListView<Integer> lvCompraID = new ListView<>(); //00042823 Crea un ListView para el ID de la compra
+
+    @FXML
+    private ListView<Date> lvCompraFecha = new ListView<>(); //00042823 Crea un ListView para la fecha de la compra
+
+    @FXML
+    private ListView<Double> lvCompraMonto = new ListView<>(); //00042823 Crea un ListView para el monto de la compra
+
+    @FXML
+    private ListView<Integer> lvCompraTarjetaID = new ListView<>(); //00042823 Crea un ListView para el ID de la Tarjeta con la que se hizo la compra
+
+    @FXML
+    private ListView<String> lvCompraDescripcion = new ListView<>(); //00042823 Crea un ListView para la descripción de la compra (debatí si la tabla debería mostrar esto, legítimamente)
+
+    @FXML
     private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
 
 
@@ -86,11 +128,11 @@ public class BancoController {
         campoObligatorio2.setVisible(false);
         campoObligatorio3.setVisible(false);
 
-        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress);
-        ObservableList<Facilitador> facilitadores = FXCollections.observableArrayList(cmbFacilitador.getItems()); //00042823 Se crea una lista observable con el único propósito de agregar opciones a cmbFacilitador
-        cmbFacilitador.setItems(facilitadores); //00042823 Se definen las opciones de cmbFacilitadores por medio de la lista observable
+        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress); //00042823 Se meten las opciones para el ComboBox de facilitadores para generar el reporte D
 
-        // 00022423 Asignar una acción al botón btnConsultar
+        fillTablaClientes(); //00042823 Se llena la tabla de clientes para el READ del CRUD
+        fillTablaTarjetas(); //00042823 Se llena la tabla de tarjeta, parte del READ
+        fillTablaCompras(); //00042823 Se llena la tabla de compras, parte del READ para compras
 
         //00022423 Llenar el ChoiceBox cbMes con los nombres de los meses
         cbMes.setItems(FXCollections.observableArrayList("enero",
@@ -270,5 +312,44 @@ public class BancoController {
             //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
         }
 
+    }
+
+    private void fillTablaClientes() { //Función para inicializar la tabla de clientes en la interfaz, un conjunto de ListViews que hacen de columnas
+
+        for(Cliente c : Select.getInstance().selectCliente()){ //00042823 Con la colección de clientes, por cada uno de los que exista...
+            lvClienteID.getItems().add(c.getId()); //00042823 ... Agrega el ID del cliente al ListView...
+            lvClienteApellidos.getItems().add(c.getApellidos()); //00042823 ... Y los apellidos del cliente a otra ListView...
+            lvClienteNombres.getItems().add(c.getNombres()); //00042823 ... Y los nombres del cliente...
+
+            if (c.getDireccion() == null){ //00042823 No debería de haber nulos, pero es una columna que se agregó después, así que solo por eso...
+                lvClienteDireccion.getItems().add("No hay dirección guardada"); //00042823 Si la dirección es nula, entonces se mete este texto en vez de mostrar la dirección
+            }
+            else lvClienteDireccion.getItems().add(c.getDireccion()); //00042823 En caso de que no sea nula (como debe ser), muestra la dirección...
+
+            lvClienteNumTelefono.getItems().add(c.getTelefono()); //00042823 Ya de último se agrega el teléfono del cliente
+        }
+    }
+
+    private void fillTablaTarjetas() { //00042823 Función para llenar la tabla de tarjetas en la interfaz
+
+        for(Tarjeta t : Select.getInstance().selectTarjeta()){ //00042823 Se obtiene la lista de tarjetas y por cada uno de los elementos en la lista...
+            lvTarjetaID.getItems().add(t.getId()); //00042823 ... Se agrega el ID a la primera columna de la tabla (el ListView)...
+            lvTarjetaClienteID.getItems().add(t.getClienteID()); //00042823 ... Se agrega el ID del cliente (sería mejor con el nombre completo del cliente, pero así se va) a la segunda columna...
+            lvTarjetaNum.getItems().add(t.getNumeroTarjeta()); //00042823 ... Se agrega el número de tarjeta, sin censurar...
+            lvTarjetaFechaExp.getItems().add(t.getFechaExpiracion()); //00042823 ... Se agrega la fecha de expiración de la tarjeta...
+            lvTarjetaFacilitador.getItems().add(t.getFacilitador()); //000042823 ... Se agrega el facilitador de la tarjeta...
+            lvTarjetaTipo.getItems().add(t.getTipo()); //00042823 ... Y se agrega el tipo de la tarjeta
+        }
+    }
+
+    private void fillTablaCompras(){ //00042823 Función para llenar la tabla de compras en la interfaz
+
+        for(Compra c : Select.getInstance().selectCompra()){
+            lvCompraID.getItems().add(c.getCodigo());
+            lvCompraFecha.getItems().add(c.getFechaCompra());
+            lvCompraMonto.getItems().add(c.getMonto());
+            lvCompraTarjetaID.getItems().add(c.getTarjetaID());
+            lvCompraDescripcion.getItems().add(c.getDescripcion());
+        }
     }
 }

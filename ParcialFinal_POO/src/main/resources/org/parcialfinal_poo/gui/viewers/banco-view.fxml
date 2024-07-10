@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
@@ -30,7 +31,66 @@
                                       <tabs>
                                         <Tab closable="false" text="Leer registro">
                                              <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER" layoutX="14.0" layoutY="118.0" prefHeight="311.0" prefWidth="705.0" style="-fx-background-color: #CECECE;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                                         <children>
+                                                            <VBox>
+                                                               <children>
+                                                                  <Label text="ID">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvClienteID" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </VBox>
+                                                            <VBox layoutX="345.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Apellidos">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvClienteApellidos" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Nombres">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvClienteNombres" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="395.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Dirección">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvClienteDireccion" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Número telefónico">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvClienteNumTelefono" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children></AnchorPane>
                                              </content>
                                           </Tab>
                                         <Tab closable="false" text="Agregar registro">
@@ -62,7 +122,76 @@
                                        <tabs>
                                           <Tab closable="false" text="Leer registro">
                                              <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER" prefHeight="311.0" prefWidth="705.0" style="-fx-background-color: #CECECE;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                                         <children>
+                                                            <VBox>
+                                                               <children>
+                                                                  <Label text="ID">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaID" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </VBox>
+                                                            <VBox layoutX="345.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Cliente ID">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaClienteID" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" maxWidth="300.0" prefWidth="250.0">
+                                                               <children>
+                                                                  <Label text="Número de tarjeta">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaNum" maxWidth="400.0" minWidth="200.0" prefWidth="350.0" style="-fx-border-color: #FFFFFF;" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="395.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Fecha de expiración">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaFechaExp" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Facilitador">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaFacilitador" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="525.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Tipo de tarjeta">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvTarjetaTipo" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children></AnchorPane>
                                              </content></Tab>
                                           <Tab closable="false" text="Agregar registro">
                                              <content>
@@ -92,7 +221,66 @@
                                        <tabs>
                                           <Tab closable="false" text="Leer registro">
                                              <content>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER" prefHeight="311.0" prefWidth="705.0" style="-fx-background-color: #CECECE;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                                         <children>
+                                                            <VBox>
+                                                               <children>
+                                                                  <Label text="ID">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvCompraID" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </VBox>
+                                                            <VBox layoutX="345.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Fecha de Compra">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvCompraFecha" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Monto">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvCompraMonto" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="395.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Tarjeta ID">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvCompraTarjetaID" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <VBox layoutX="370.0" layoutY="10.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <Label text="Descripción de compra">
+                                                                     <VBox.margin>
+                                                                        <Insets left="3.0" />
+                                                                     </VBox.margin>
+                                                                  </Label>
+                                                                  <ListView fx:id="lvCompraDescripcion" prefHeight="200.0" prefWidth="50.0" style="-fx-border-color: #FFFFFF;" VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children></AnchorPane>
                                              </content></Tab>
                                           <Tab closable="false" text="Agregar registro">
                                              <content>
