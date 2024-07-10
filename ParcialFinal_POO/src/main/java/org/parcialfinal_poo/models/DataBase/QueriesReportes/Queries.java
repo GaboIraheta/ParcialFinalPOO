@@ -1,8 +1,10 @@
 package org.parcialfinal_poo.models.DataBase.QueriesReportes;
 
 import javafx.scene.control.Alert;
+import org.parcialfinal_poo.models.Banco.Cliente;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
+import org.parcialfinal_poo.models.DataBase.Selects.Select;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -89,10 +91,25 @@ public class Queries extends DataBaseQueries {
             // 00022423 Se ejecuta la consulta y se obtiene el resultado en un objeto ResultSet.
             ResultSet rs = prepareStatement.executeQuery();
 
-            if (rs.next()){
-                //// 00022423 Si hay un resultado, se obtiene el valor de la primera columna y se asigna a la variable total.
-                total = rs.getDouble(1);
+            boolean flag = true; //00042823 Se crea una bandera ya levantada para verificar si existe el cliente, asumiendo que clienteID contiene un ID de un cliente que no existe
+
+            for (Cliente c : Select.getInstance().selectCliente()){ //00042823 Llamamos a la base de datos para verificar si, en efecto, existe el cliente
+                if (clienteID == c.getId()){ //00042823 Verifica si clienteID coincide con el ID de algún cliente
+                    flag = false; //00042823 Si encuentra una coincidencia, se baja la bandera
+                    break; //00042823 Se rompe el bucle, ya no es necesario buscar más
+                }
             }
+
+            if (rs.next()){
+                if (flag){ //Si la bandera está alzada...
+                    total = -1; // 00042823 Se coloca -1 para indicar que, no solo no gasto nada, sino que no existe el cliente para empezar
+                }
+                else {
+                    // 00022423 Si hay un resultado, se obtiene el valor de la primera columna y se asigna a la variable total.
+                    total = rs.getDouble(1);
+                }
+            }
+
 
         }catch (SQLException e){
             // 00022423 En caso de que ocurra una excepción SQL, se imprime el mensaje de error.

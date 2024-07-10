@@ -45,14 +45,7 @@ public class BancoController {
     private ComboBox<Facilitador> cmbFacilitador = new ComboBox<>(); //00042823 Crea un ComboBox que servirá para elegir el tipo de facilitador de la tarjeta para el reporte D
 
     @FXML
-    private ComboBox<?> cmbTablaConsultada;
-
-    @FXML
     private DatePicker dpFechaInicial;
-    private DatePicker dpFechaFinalRA;
-
-    @FXML
-    private DatePicker dpFechaInicialRB;
 
     @FXML
     private DatePicker dpFechaFinal;
@@ -79,7 +72,63 @@ public class BancoController {
     private TextArea taMuestraReporte, taDescription;
 
     @FXML
-    private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
+    private ListView<Integer> lvClienteID = new ListView<>(); //00042823 Crea un ListView para el ID del cliente
+
+    @FXML
+    private ListView<String> lvClienteNombres = new ListView<>(); //00042823 Crea un ListView para los nombres del cliente
+
+    @FXML
+    private ListView<String> lvClienteApellidos = new ListView<>(); //00042823 Crea un ListView para los apellidos del cliente
+
+    @FXML
+    private ListView<String> lvClienteDireccion = new ListView<>(); //00042823 Crea un ListView para la dirección del cliente
+
+    @FXML
+    private ListView<String> lvClienteNumTelefono = new ListView<>(); //00042823 Crea un ListView para el teléfono del cliente
+
+    @FXML
+    private ListView<Integer> lvTarjetaID = new ListView<>(); //00042823 Crea un ListView para el ID de la tarjeta
+
+    @FXML
+    private ListView<Integer> lvTarjetaClienteID = new ListView<>(); //00042823 Crea un ListView para el ID del cliente dueño de la tarjeta
+
+    @FXML
+    private ListView<String> lvTarjetaNum = new ListView<>(); //00042823 Crea un ListView para el número de la tarjeta, sin censura
+
+    @FXML
+    private ListView<Date> lvTarjetaFechaExp = new ListView<>(); //00042823 Crea un ListView para la fecha de expiración de la tarjeta
+
+    @FXML
+    private ListView<Facilitador> lvTarjetaFacilitador = new ListView<>(); //00042823 Crea un ListView para el facilitador de la tarjeta
+
+    @FXML
+    private ListView<TipoTarjeta> lvTarjetaTipo = new ListView<>(); //00042823 Crea un ListView para el tipo de la tarjeta (crédito o débito)
+
+    @FXML
+    private ListView<Integer> lvCompraID = new ListView<>(); //00042823 Crea un ListView para el ID de la compra
+
+    @FXML
+    private ListView<Date> lvCompraFecha = new ListView<>(); //00042823 Crea un ListView para la fecha de la compra
+
+    @FXML
+    private ListView<Double> lvCompraMonto = new ListView<>(); //00042823 Crea un ListView para el monto de la compra
+
+    @FXML
+    private ListView<Integer> lvCompraTarjetaID = new ListView<>(); //00042823 Crea un ListView para el ID de la Tarjeta con la que se hizo la compra
+
+    @FXML
+    private ListView<String> lvCompraDescripcion = new ListView<>(); //00042823 Crea un ListView para la descripción de la compra (debatí si la tabla debería mostrar esto, legítimamente)
+
+    @FXML
+    private Label
+            errorLabel1,
+            errorLabel2,
+            errorLabel3,
+            errorLabel4, //00042823 Label para el reporte B que indicará al cliente algún error en el ingreso de datos
+            errorLabel5, //00042823 Otro label, para otro campo, siempre del reporte B
+            errorLabel6, //00042823 Y un último label para la validación de datos para el reporte B
+            errorLabel7, //00042823 Label para validar datos para el reporte C
+            errorLabel8; //00042823 Label para validar datos para el reporte D
 
 
     @FXML
@@ -147,9 +196,14 @@ public class BancoController {
     // 00022423 Método que se ejecuta cuando la interfaz gráfica se inicializa
     public void initialize() {
 
-        campoObligatorio1.setVisible(false); //00021223 se settea en false la visibilidad de los labels de control para los campos de reporte A
-        campoObligatorio2.setVisible(false);
-        campoObligatorio3.setVisible(false);
+        errorLabel1.setVisible(false);
+        errorLabel2.setVisible(false);
+        errorLabel3.setVisible(false);
+        errorLabel4.setVisible(false);
+        errorLabel5.setVisible(false);
+        errorLabel6.setVisible(false);
+        errorLabel7.setVisible(false);
+        errorLabel8.setVisible(false);
 
         campoObligatorioUpdateCliente1.setVisible(false); //00021223 se settea en false la visibilidad de los labels de control para los campos de actualizar registros de clientes
         campoObligatorioUpdateCliente2.setVisible(false);
@@ -204,10 +258,11 @@ public class BancoController {
             }
         });
 
+        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress); //00042823 Se meten las opciones para el ComboBox de facilitadores para generar el reporte D
 
-        cmbFacilitador.getItems().addAll(Facilitador.Visa, Facilitador.MasterCard, Facilitador.AmericanExpress); //00021223 se cargan los items del combobox
-        ObservableList<Facilitador> facilitadores = FXCollections.observableArrayList(cmbFacilitador.getItems()); //00042823 Se crea una lista observable con el único propósito de agregar opciones a cmbFacilitador
-        cmbFacilitador.setItems(facilitadores); //00042823 Se definen las opciones de cmbFacilitadores por medio de la lista observable
+        fillTablaClientes(); //00042823 Se llena la tabla de clientes para el READ del CRUD
+        fillTablaTarjetas(); //00042823 Se llena la tabla de tarjeta, parte del READ
+        fillTablaCompras(); //00042823 Se llena la tabla de compras, parte del READ para compras
 
         //00022423 Llenar el ChoiceBox cbMes con los nombres de los meses
         cbMes.setItems(FXCollections.observableArrayList("enero",
@@ -272,6 +327,7 @@ public class BancoController {
         }
 
         Insert.getInstance().registrarCliente(tfNames.getText(), tfLastNames.getText(), tfAdress.getText(), tfTelephone.getText()); //00088023 Toma los datos de los campos e ingresa al nuevo cliente
+        fillTablaClientes(); //00042823 Actualiza la tabla de clientes con el nuevo registro
     }
 
     public void insertCard(){ //00088023 Método encargado de verificar y agregar nuevas tarjetas
@@ -307,12 +363,14 @@ public class BancoController {
         }
 
         try {
-            insert.registrarTarjeta(Integer.parseInt(String.valueOf(cbOwner.getValue().charAt(0))), tfCardNum.getText(),
-                    Date.valueOf(dpExp.getValue()), TipoTarjeta.valueOf(cbType.getValue()),
-                    Facilitador.valueOf(cbProvider.getValue()));
             //00088023 Si pasa todas las verificaciones, entonces toma los datos de los campos y los inserta a la base de datos
+            insert.registrarTarjeta(Integer.parseInt(String.valueOf(cbOwner.getValue().charAt(0))), tfCardNum.getText(),
+                    Date.valueOf(dpExp.getValue().toString()), TipoTarjeta.valueOf(cbType.getValue()),
+                    Facilitador.valueOf(cbProvider.getValue()));
+            fillTablaTarjetas(); //00042823 Actualiza la tabla una vez agregado el registro
 
         }catch (Exception e){//00088023 Si un error ocurre (principalmente de meter letras donde deben ir números) Se lo hace saber al usuario y no inserta los datos
+            e.printStackTrace();
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setTitle("Formato de datos incorrecto");
             alert.setHeaderText(null);
@@ -334,6 +392,7 @@ public class BancoController {
         }
         try {
             insert.registrarCompra(Date.valueOf(dpDate.getValue()), Double.parseDouble(tfMontoCompra.getText()),taDescription.getText(), Integer.parseInt(String.valueOf(cbCard.getValue().charAt(0))));//00088023 Agrega los datos de los campos a la tabla de compras
+            fillTablaCompras(); //00042823 Actualiza la tabla de compras con el nuevo registro
         } catch (Exception e){//00088023 Si hubo un error con el formato de los datos, se lo hace saber al usuario
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
@@ -375,29 +434,42 @@ public class BancoController {
         cbOwner.getItems().addAll(select.selectCustomers());//00088023 Agrega a la choiceBox todos los clientes con sus respetivos id
         ObservableList<String> itemsToRender = FXCollections.observableArrayList(cbOwner.getItems());//00088023 Prepara la observable list
         cbOwner.setItems(itemsToRender);//00088023 coloca los items en la choiceBox y los muestra
-        cbProvider.setItems(FXCollections.observableArrayList("Visa", "MasterCard", "American Express")); //00088023 Agrega y muestra los facilitadores a la choiceBox
+        cbProvider.setItems(FXCollections.observableArrayList("Visa", "MasterCard", "AmericanExpress")); //00088023 Agrega y muestra los facilitadores a la choiceBox
         cbType.setItems(FXCollections.observableArrayList("Credito", "Debito"));//00088023 Agrega y muestra los tipos de tarjeta a la choiceBox
     }
 
     private void mostrarReporteA() {
-        campoObligatorio1.setVisible(false);
-        campoObligatorio2.setVisible(false);
-        campoObligatorio3.setVisible(false);
+        errorLabel1.setVisible(false);
+        errorLabel2.setVisible(false);
+        errorLabel3.setVisible(false);
 
-        boolean flag = false; //00021223 se inicializa un booleano para el control la accion y validar que todos los campos esten llenos
 
-        if (tfIdClienteRA.getText().isEmpty()) { //00021223 valida si el textfield de clienteID esta vacio
-            campoObligatorio1.setVisible(true); //00021223 si esta vacion se hace visible el primer control de seleccion
+        boolean flag = false; //00021223 Bandera para validar
+
+        try{ //00042823 Nueva validación, que el ID sea un entero
+            Integer.parseInt(tfIdClienteRA.getText()); //00042823 Hace la transformación solo para ver si lanza una excepción
+        }
+        catch (NumberFormatException e) { //00042823 Si se lanza la excepción, entonces...
+
+            if (tfIdClienteRA.getText().isEmpty()) { //00021223 valida si el textfield de clienteID esta vacio
+                errorLabel1.setText("Campo obligatorio");
+            }
+            else {
+                errorLabel1.setText("Ingrese un ID válido");
+            }
+            errorLabel1.setVisible(true); //00021223 si esta vacion se hace visible el primer control de seleccion
             flag = true; //00021223 se levanta la bandera
         }
 
         if (dpFechaInicial.getValue() == null) { //00021223 valida si el datepicker de fecha inicial esta vacio
-            campoObligatorio2.setVisible(true); //00021223 si esta vacio se hace visible el segundo control de seleccion
+            errorLabel2.setText("Campo obligatorio");
+            errorLabel2.setVisible(true); //00021223 si esta vacio se hace visible el segundo control de seleccion
             flag = true; //00021223 se levanta la bandera
         }
 
         if (dpFechaFinal.getValue() == null) { //00021223 valida si el datepicker de fecha final esta vacio
-            campoObligatorio3.setVisible(true); //00021223 si esta vacio se hace visible el tercer control de seleccion
+            errorLabel3.setText("Campo obligatorio");
+            errorLabel3.setVisible(true); //00021223 si esta vacio se hace visible el tercer control de seleccion
             flag = true; //00021223 se levanta la bandera
         }
 
@@ -416,89 +488,157 @@ public class BancoController {
                         compra.getMonto() + "\nID de tarjeta: " + compra.getTarjetaID() + "\n\n"); //00021223 se concatena cada registro en la variable text
             }
 
-            taMuestraReporte.setText(text); //00021223 settea el texto del textarea para mostrar el resultado de la consulta
-            TextFiles.createFile('A', text); //00021223 genera el reporte de la consulta utilizando el metodo createFile, se le pasa un char que indica el reporte y el texto que es la consulta completa
+            if (!text.isEmpty()) { //00042823 Esto solo debería ocurrir si el ID del cliente no existe, que daría como resultado un ResultSet vacío y, por tanto, nada que reportar
+                taMuestraReporte.setText(text); //00021223 settea el texto del textarea para mostrar el resultado de la consulta
+                TextFiles.createFile('A', text); //00021223 genera el reporte de la consulta utilizando el metodo createFile, se le pasa un char que indica el reporte y el texto que es la consulta completa
+            } else { //00042823 Si, en efecto, no hay nada que reportar, pues entonces no se crea el reporte (¿para qué tener un .txt vacío?)
+                taMuestraReporte.setText("Nada que reportar..."); //00042823 Muestra en el TextArea que no hay nada que reportar
+            }
         }
     }
 
     private void mostrarReporteB() {
-        try {
+        errorLabel4.setVisible(false); //00042823 Por defecto...
+        errorLabel5.setVisible(false); //00042823 Los labels de error...
+        errorLabel6.setVisible(false); //00042823 Son invisibles
+
+        // 00022423 Definir el rango de años válidos
+        int anioMinimo = 1900;
+        int anioMaximo = 2100;
+        String mes = cbMes.getValue();
+
+        boolean flag = false; //00042823 Se crea una bandera para validar datos
+
+        try { //00042823 Se verifica que el año ingresado sea un número para empezar
+            Integer.parseInt(tfIdClienteRB.getText()); //00042823 Si no es número, lanza una excepción
+        } catch (NumberFormatException e) { //00042823 Se atrapa la excepción, si ocurre
+            if (tfIdClienteRB.getText().isEmpty()) { //00042823 Se verifica si el usuario llenó el campo
+                errorLabel4.setText("Campo obligatorio"); //00042823 El usuario no llenó el campo
+            }
+            else {
+                errorLabel4.setText("Ingrese un año válido"); //00042823 Establece el tipo de error
+            }
+            errorLabel4.setVisible(true); //00042823 Se hace visible el label
+            flag = true; //00042823 Se levanta la bandera
+        }
+
+        if (mes == null) {//00042823 La única forma de que mes sea null es que no ha seleccionada nada
+            errorLabel5.setText("Campo obligatorio"); //00042823 Se le olvidó llenar este campo también
+            errorLabel5.setVisible(true); //00042823 Se hace visible el label
+            flag = true; //00042823 Se levanta la bandera
+        }
+
+        try { //00042823 Se verifica que el año ingresado sea un número para empezar
+            int anio = Integer.parseInt(tfAnio.getText()); //00042823 Si no es número, lanza una excepción
+
+            if (anio >= anioMaximo || anio < anioMinimo) { //00042823 Verifica si el año ingresado se encuentra dentro del rango establecido arbitrariamente
+                errorLabel6.setText("Año fuera de rango (1900 - 2100)"); //00042823 Es medianamente realista, además de permitir evitar números negativos
+                errorLabel6.setVisible(true); //00042823 Se hace visible el label
+                flag = true; //00042823 Se levanta la bandera
+            }
+        } catch (NumberFormatException e) { //00042823 Se atrapa la excepción, si ocurre
+            if (tfAnio.getText().isEmpty()) { //00042823 Si el campo está vacío
+                errorLabel6.setText("Campo obligatorio"); //00042823 Y también se le olvidó llenar este campo
+            }
+            else { //00042823 Entonces, el usuario ingreso algo que no es un número
+                errorLabel6.setText("Ingrese un año válido"); //00042823 Establece el tipo de error
+            }
+            errorLabel6.setVisible(true); //00042823 Se hace visible el label
+            flag = true;//00042823 Se levanta la bandera
+        }
+
+        if (!flag) { //00042823 Si la bandera NO está levantada
+
             // 00022423 Obtener los valores ingresados por el usuario
             int clienteID = Integer.parseInt(tfIdClienteRB.getText());
-            String mes = cbMes.getValue();
             int anio = Integer.parseInt(tfAnio.getText());
 
-            // 00022423 Definir el rango de años válidos
-            int anioMinimo = 1900;
-            int anioMaximo = 2100;
+            // 00022423 Convertir el mes en índice (1-12)
+            int mesIndex = cbMes.getItems().indexOf(mes) + 1;
+            // 00022423 Obtener el total de gasto del cliente para el mes y año seleccionados
+            double totalGasto = Queries.getInstance().generarReporteB(clienteID, anio, mesIndex);
+            // 00022424 Mostrar el resultado en el TextArea
 
-            // 00022423 Verificar que se hayan seleccionado mes y año válidos
-            if (mes != null && !mes.isEmpty() && anio >= anioMinimo && anio <= anioMaximo) {
-                // 00022423 Convertir el mes en índice (1-12)
-                int mesIndex = cbMes.getItems().indexOf(mes) + 1;
-                // 00022423 Obtener el total de gasto del cliente para el mes y año seleccionados
-                double totalGasto = Queries.getInstance().generarReporteB(clienteID, anio, mesIndex);
-                // 00022424 Mostrar el resultado en el TextArea
+            String text = "El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: $" + totalGasto;
 
-                String text = "El gasto total del Cliente ID " + clienteID + " en " + mes.toLowerCase() + " " + anio + " es: $" + totalGasto;
-
+            if (totalGasto != -1) { //00042823 Si el gasto es -1, entonces el cliente no existe
                 taMuestraReporte.setText(text);
-                TextFiles.createFile('B', text); //TODO: comentar
-            } else {
-                // 00022423 Mostrar una alerta si los datos no son válidos
-                mostrarAlerta("Entrada Inválida", "Por favor, seleccione un mes y un año válidos entre " + anioMinimo + " y " + anioMaximo + ".");
+                TextFiles.createFile('A', text); //TODO: Comentar (Rocía)
+            } else { //00042823 Si, en efecto, no hay nada que reportar, pues entonces no se crea el reporte (¿para qué tener un .txt vacío?)
+                taMuestraReporte.setText("Nada que reportar..."); //00042823 Muestra en el TextArea que no hay nada que reportar
             }
-
-        } catch (NumberFormatException e) {
-            // 00022423 Mostrar una alerta si los datos no son válidos (formato de número)
-            mostrarAlerta("Entrada Inválida", "Por favor, ingrese un ID de cliente y un año válidos.");
-        } catch (Exception e) {
-            // 00022423 Mostrar una alerta si ocurre un error al generar el reporte
-            mostrarAlerta("Error", "Ocurrió un error al generar el reporte: " + e.getMessage());
         }
     }
 
     private void mostrarReporteC() {//00088023 Método encargado de realizar el reporte C
-        try {
+        errorLabel7.setVisible(false);
+
+        boolean flag = false; //00042823 Se crea una bandera para validar datos
+
+        try { //00042823 Verifica si el TextField tiene un número entero
+            Integer.parseInt(tfIdClienteRC.getText()); //00042823 Lanza una excepción si el número no es entero
+        } catch (NumberFormatException e) { //00042823 En caso de que se haya lanzado una excepción...
+
+            if (tfIdClienteRC.getText().isEmpty()) { //00042823 Se verifica si el usuario llenó el campo
+                errorLabel7.setText("Campo obligatorio"); //00042823 El usuario no llenó el campo
+            } else { //00042823 Entonces, el usuario ingreso algo que no es un número
+                errorLabel7.setText("Ingrese un ID válido"); //00042823 Establece el tipo de error
+            }
+            errorLabel7.setVisible(true); //00042823 Se hace visible el label
+            flag = true; //00042823 Se levanta la bandera
+        }
+
+        if (!flag) { //00042823 Si la bandera no está levantada...
+            String text;
             taMuestraReporte.setText("");//00088023 Primeramente se limpia el textArea
             int ClienteID = Integer.parseInt(tfIdClienteRC.getText());//00088023 Se Recibe el id del cliente del texArea y lo convierte en entero
             ArrayList<String> credito = new ArrayList<>(), debito = new ArrayList<>();//00088023 Inicializa dos arrays, uno que guarda las tarjetas de crédito, y el otro de débito
             Queries.getInstance().generarReporteC(ClienteID, credito, debito);//00088023 Llama al generaador de reporte que llene los arrays
 
-            String text = "Tarjetas de crédito del cliente:\n"; //00088023 Empieza a darle formato al texto a mostrar
-            if (credito.isEmpty()) {//00088023 Revisa si el array está vacio
-                text = text.concat("N/A");//00088023 Si está vacio entonces le pone como texto "N/A"
-            } else {
-                for (String tarjeta : credito) { //00088023 Si no está vacio entonces empieza a ingresar todas las tarjetas de crédito
-                    text = text.concat(tarjeta + "\n");
+            for (Cliente c : Select.getInstance().selectCliente()) { //00042823 Llamamos a la base de datos para verificar si, en efecto, existe el cliente
+                if (ClienteID == c.getId()) { //00042823 Verifica si clienteID coincide con el ID de algún cliente,
+
+                    text = "Tarjetas de crédito del cliente:\n"; //00088023 Empieza a darle formato al texto a mostrar
+                    if (credito.isEmpty()) {//00088023 Revisa si el array está vacio
+                        text = text.concat("N/A");//00088023 Si está vacio entonces le pone como texto "N/A"
+                    } else {
+                        for (String tarjeta : credito) { //00088023 Si no está vacio entonces empieza a ingresar todas las tarjetas de crédito
+                            text = text.concat(tarjeta + "\n");
+                        }
+                    }
+
+                    text = text.concat("\n\nTarjetas de débito del cliente:\n");//00088023 Le da formato al texto para mostrar las tarjetas de débito
+
+                    if (debito.isEmpty()) {//00088023 Revisa si el array no está vacio
+                        text = text.concat("N/A");//00088023 Si lo está, entonces escribe "N/A"
+                    } else {
+                        for (String tarjeta : debito) {//00088023 Si no esta vacio, entonces escribe todas las tarjetas en el texto
+                            text = text.concat(tarjeta + "\n");
+                        }
+                    }
+
+                    taMuestraReporte.setText(text);//00088023 Muestra el texto en el TextArea
+                    TextFiles.createFile('C', text); //00088023 Llama a la función para crear un archivo con el reporte
+
+                    break; //00042823 Ya no continuará recorriendo la lista de IDs
+
+                } else { //Si no encuentra una coincidencia, entonces no hay nada que reportar
+                    taMuestraReporte.setText("Nada que reportar..."); //00042823 Muestra en el TextArea que no hay nada que reportar
                 }
             }
-
-            text = text.concat("\n\nTarjetas de débito del cliente:\n");//00088023 Le da formato al texto para mostrar las tarjetas de débito
-
-            if (debito.isEmpty()) {//00088023 Revisa si el array no está vacio
-                text = text.concat("N/A");//00088023 Si lo está, entonces escribe "N/A"
-            } else {
-                for (String tarjeta : debito) {//00088023 Si no esta vacio, entonces escribe todas las tarjetas en el texto
-                    text = text.concat(tarjeta + "\n");
-                }
-            }
-
-            taMuestraReporte.setText(text);//00088023 Muestra el texto en el TextArea
-            TextFiles.createFile('C',text); //00088023 Llama a la función para crear un archivo con el reporte
-        } catch (Exception e) {
-            mostrarAlerta("Error", "Ingrese un valor válido");//00088023 Este error se recibe por el parseInteger, por lo tanto el usuario ingreso un valor no válido
         }
     }
 
     private void mostrarReporteD() {
+        errorLabel8.setVisible(false);
+
         if (cmbFacilitador.getValue() != null) { //00042823 Si hay una opción selecciona por cmbFacilitador...
             String text = ""; //00042823 Es una cadena vacía que tiene como propósito concatenar el contenido completo del reporte D
             ResultSet rs = Queries.getInstance().generarReporteD(cmbFacilitador.getValue()); //00042823 Se llama al singleton Queries para hacer la consulta para el reporte D con el facilitador seleccionado, el cual se almacena en un ResultSet
 
-            boolean flag = true; //00042823 Se crea una bandera que sirva para indicar si hay valores en el ResultSet
+            boolean flag = false; //00042823 Se crea una bandera que sirva para indicar si hay valores en el ResultSet
             try { //00042823 El método next() para ResultSet lanza SQLExceptions que no pueden dejarse irresolubles
-                while (flag) { //00042823 Bucle para recorrer las "filas" de la tabla a consultar
+                while (!flag) { //00042823 Bucle para recorrer las "filas" de la tabla a consultar
                     if (rs.next()) {
                         text = text.concat( //00042823 Por cada cliente, se concatena la siguiente información
                                 "Cliente: " + rs.getInt("id") + "\n" //00042823 El ID del cliente
@@ -508,21 +648,22 @@ public class BancoController {
                                         + "Gasto total: $" + rs.getDouble("total") + "\n\n" //00042823 Cuánto ha gastado en total el cliente por medio del facilitador
                         );
                     } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
-                        flag = false; //00042823 Baja la bandera
+                        flag = true; //00042823 Se levanta la bandera
 
                         DataBase dataBase = new DataBase() {}; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
                         dataBase.getConnection().close(); //00042823 Se cierra la conexión, que quedaba abierta por usar el ResultSet
                     }
                 }
                 taMuestraReporte.setText(text); //00042823 Escribe el texto entero concatenado en el TextArea donde se ven los reportes
-                TextFiles.createFile('D', text); //TODO: comentar
+                TextFiles.createFile('D', text); //00042823 Genera el archivo .txt del reporte D
 
             } catch (SQLException e) { //00042823 Si algo malo ocurre, entonces atrapa la excepción...
                 e.printStackTrace(); //00042823 ... Para luego imprimir la cadena de errores de la excepción
             }
 
         } else { //00042823 Si no hay nada seleccionado por cmbFacilitador
-            //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
+            errorLabel8.setText("Campo obligatorio"); //00042823 Se establece el texto del error
+            errorLabel8.setVisible(true); //00042823 Se le hace ver al usuario su ineptitud para operar la interfaz
         }
     }
 
@@ -811,6 +952,8 @@ public class BancoController {
                     tfConcepto.getText(), Integer.parseInt(tfIDTarjeta.getText()), Integer.parseInt(tfCompraID.getText()));
             //00021223 se ejecuta la query para actualizar un registro de compra pasandole como paramtros los campos requeridos
 
+            fillTablaCompras(); //00042823 Actualiza la tabla con los nuevos datos
+
             tfMonto.setText(""); //00021223 se settean los textos en vacio
             tfConcepto.setText("");
             tfIDTarjeta.setText("");
@@ -822,7 +965,61 @@ public class BancoController {
             tfIDTarjeta.setDisable(true);
             dpFechaCompra.setDisable(true);
         }
+    }
 
+    private void fillTablaClientes() { //Función para inicializar la tabla de clientes en la interfaz, un conjunto de ListViews que hacen de columnas
+        lvClienteID.getItems().clear(); //00042823 Limpia
+        lvClienteNombres.getItems().clear(); //0004223 la
+        lvClienteApellidos.getItems().clear(); //00042823 tabla
+        lvClienteNumTelefono.getItems().clear(); //00042823 de
+        lvClienteDireccion.getItems().clear(); //00042823 clientes
+
+        for(Cliente c : Select.getInstance().selectCliente()){ //00042823 Con la colección de clientes, por cada uno de los que exista...
+            lvClienteID.getItems().add(c.getId()); //00042823 ... Agrega el ID del cliente al ListView...
+            lvClienteApellidos.getItems().add(c.getApellidos()); //00042823 ... Y los apellidos del cliente a otra ListView...
+            lvClienteNombres.getItems().add(c.getNombres()); //00042823 ... Y los nombres del cliente...
+
+            if (c.getDireccion() == null){ //00042823 No debería de haber nulos, pero es una columna que se agregó después, así que solo por eso...
+                lvClienteDireccion.getItems().add("No hay dirección guardada"); //00042823 Si la dirección es nula, entonces se mete este texto en vez de mostrar la dirección
+            }
+            else lvClienteDireccion.getItems().add(c.getDireccion()); //00042823 En caso de que no sea nula (como debe ser), muestra la dirección...
+
+            lvClienteNumTelefono.getItems().add(c.getTelefono()); //00042823 Ya de último se agrega el teléfono del cliente
+        }
+    }
+
+    private void fillTablaTarjetas() { //00042823 Función para llenar la tabla de tarjetas en la interfaz
+        lvTarjetaID.getItems().clear(); //00042823 Se
+        lvTarjetaClienteID.getItems().clear(); //00042823 limpia
+        lvTarjetaNum.getItems().clear(); //00042823 la
+        lvTarjetaFechaExp.getItems().clear(); //00042823 tabla
+        lvTarjetaFacilitador.getItems().clear(); //00042823 de
+        lvTarjetaTipo.getItems().clear(); //00042823 tarjetas
+
+        for(Tarjeta t : Select.getInstance().selectTarjeta()){ //00042823 Se obtiene la lista de tarjetas y por cada uno de los elementos en la lista...
+            lvTarjetaID.getItems().add(t.getId()); //00042823 ... Se agrega el ID a la primera columna de la tabla (el ListView)...
+            lvTarjetaClienteID.getItems().add(t.getClienteID()); //00042823 ... Se agrega el ID del cliente (sería mejor con el nombre completo del cliente, pero así se va) a la segunda columna...
+            lvTarjetaNum.getItems().add(t.getNumeroTarjeta()); //00042823 ... Se agrega el número de tarjeta, sin censurar...
+            lvTarjetaFechaExp.getItems().add(t.getFechaExpiracion()); //00042823 ... Se agrega la fecha de expiración de la tarjeta...
+            lvTarjetaFacilitador.getItems().add(t.getFacilitador()); //000042823 ... Se agrega el facilitador de la tarjeta...
+            lvTarjetaTipo.getItems().add(t.getTipo()); //00042823 ... Y se agrega el tipo de la tarjeta
+        }
+    }
+
+    private void fillTablaCompras(){ //00042823 Función para llenar la tabla de compras en la interfaz
+        lvCompraID.getItems().clear(); //00042823 Limpia
+        lvCompraFecha.getItems().clear(); //0004223 la
+        lvCompraTarjetaID.getItems().clear(); //00042823 tabla
+        lvCompraMonto.getItems().clear(); //00042823 de
+        lvCompraDescripcion.getItems().clear(); //00042823 compras
+
+        for(Compra c : Select.getInstance().selectCompra()){
+            lvCompraID.getItems().add(c.getCodigo());
+            lvCompraFecha.getItems().add(c.getFechaCompra());
+            lvCompraMonto.getItems().add(c.getMonto());
+            lvCompraTarjetaID.getItems().add(c.getTarjetaID());
+            lvCompraDescripcion.getItems().add(c.getDescripcion());
+        }
     }
 
 
