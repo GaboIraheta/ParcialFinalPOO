@@ -14,7 +14,7 @@ public abstract class DataBaseUpdate extends DataBase {
             return "UPDATE Cliente SET nombres = ?, apellidos = ?, direccion = ?," +
                     " numTelefono = ? WHERE id = ?"; //00021223 retorna la query para actualizar en la tabla Cliente
         } else if(query == 1) { //00021223 se verifica si la query requerida es para actualizar en la tabla tarjeta
-            return "UPDATE Tarjeta SET numTarjeta = ?, fechaExp = ?, tipo = ?, facilitadorID = ? WHERE id = ?"; //00021223 retorna la query para actualizar en la tabla Tarjeta
+            return "UPDATE Tarjeta SET numTarjeta = ?, fechaExp = ?, tipo = ?, facilitadorID = ?, clienteID = ? WHERE id = ?"; //00021223 retorna la query para actualizar en la tabla Tarjeta
         } else if(query == 2) { //00021223 se verifica si la query requerida es para actualizar en la tabla Compra
             return "UPDATE Compra SET fechaCompra = ?, monto = ?, descripcion = ?, tarjetaID = ? WHERE id = ?"; //00021223 retorna la query para actualizar en la tabla Compra
         } else {
@@ -25,7 +25,7 @@ public abstract class DataBaseUpdate extends DataBase {
     public abstract void updateCliente(String nombres, String apelllidos, String direccion, String numTelefono, int id);
     //00021223 metodo abstracto para actualizar datos de la tabla Cliente
 
-    public abstract void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int id);
+    public abstract void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int clienteID, int id);
     //00021223 metodo abstracto para actualizar datos en la tabla Tarjeta
 
     public abstract void updateCompra(Date fechaCompra, double monto, String descripcion, int tarjetaID, int id);

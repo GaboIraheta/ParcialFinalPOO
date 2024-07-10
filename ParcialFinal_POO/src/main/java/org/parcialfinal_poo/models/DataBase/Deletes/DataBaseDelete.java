@@ -9,20 +9,20 @@ public abstract class DataBaseDelete extends DataBase {
         if(query == 0) { //00021223 se verifica si la query requerida es para eliminar en la tabla Cliente
             return "DELETE FROM Cliente WHERE id = ?"; //00021223 retorna la query para eliminar en la tabla Cliente
         } else if(query == 1) { //00021223 se verifica si la query requerida es para eliminar en la tabla tarjeta
-            return "DELETE FROM Tarjeta WHERE id = ?"; //00021223 retorna la query para eliminar en la tabla Tarjeta
+            return "DELETE FROM Tarjeta WHERE Tarjeta.id = ?"; //00021223 retorna la query para eliminar en la tabla Tarjeta
         } else if(query == 2) { //00021223 se verifica si la query requerida es para eliminar en la tabla Compra
-            return "DELETE FROM Compra WHERE id = ?"; //00021223 retorna la query para eliminar en la tabla Compra
+            return "DELETE FROM Compra WHERE Compra.id = ?"; //00021223 retorna la query para eliminar en la tabla Compra
         } else {
             return ""; //00021223 si no se le manda un parametro correcto retorna vacio
         }
     }
 
-    public abstract void deleteCliente(int id);
+    public abstract boolean deleteCliente(int id);
     //00021223 metodo abstracto para eliminar registros de la tabla Cliente
 
-    public abstract void deleteTarjeta(int id);
+    public abstract boolean deleteTarjeta(int id);
     //00021223 metodo abstracto para eliminar registros de la tabla Tarjeta
 
-    public abstract void deleteCompra(int id);
+    public abstract boolean deleteCompra(int id);
     //00021223 metodo abstracto para eliminar registros de la tabla Compra
 }

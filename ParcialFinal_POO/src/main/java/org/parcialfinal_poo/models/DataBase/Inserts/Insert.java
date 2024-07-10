@@ -2,7 +2,6 @@ package org.parcialfinal_poo.models.DataBase.Inserts;
 
 import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Cliente;
-import org.parcialfinal_poo.models.Banco.Control.Control;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
 import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
@@ -56,6 +55,7 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Cliente registrado exitosamente"
                     : "Registro de cliente fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException e) { //00021223 control de excepciones, atrapa un SQLException que sería cualquier fallo en la ejecucion de la consulta
             Alert alert = new Alert(Alert.AlertType.ERROR);//00088023 Se muestra una alerta en caso de que exista un error con los datos
@@ -104,7 +104,8 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Tarjeta registrada exitosamente"
                     : "Registro de tarjeta fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //00021223 se insertan el numero de campos afectados en el contenido de la alerta
-            alerta.showAndWait();
+            alerta.showAndWait(); //00021223 muestra la alerta
+
         } catch (SQLException e) { //00021223 control de excepciones para atrapar cualquier excepcion referente a las consultas
             //todo se debe agregar una alerta
             System.out.println(e.getMessage()); //00021223 se imprime el mensaje de error
@@ -139,7 +140,8 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Compra registrada exitosamente"
                     : "Registro de compra fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //00021223 se insertan el numero de campos afectados en el contenido de la alerta
-            alerta.showAndWait();
+            alerta.showAndWait(); //00021223 muestra la alerta
+
         } catch (SQLException e) { //00021223 control de excepciones para atrapar cualquier excepcion referente a las consultas
             //todo se debe agregar una alerta
             System.out.println(e.getMessage()); //00021223 se imprime el mensaje de error
