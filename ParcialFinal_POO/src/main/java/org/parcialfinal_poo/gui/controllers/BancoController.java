@@ -191,7 +191,6 @@ public class BancoController {
     private ChoiceBox<String> cbOwner, cbProvider, cbType, cbCard;
 
 
-
     @FXML
     // 00022423 Método que se ejecuta cuando la interfaz gráfica se inicializa
     public void initialize() {
@@ -293,14 +292,14 @@ public class BancoController {
         eliminarRegistro("Compra");
     }
 
-    public void limpiarClienteTab(){
+    public void limpiarClienteTab() {
         tfNames.setText("");
         tfLastNames.setText("");
         tfAdress.setText("");
         tfTelephone.setText("");
     }
 
-    public void limpiarCardTab(){
+    public void limpiarCardTab() {
         cbOwner.setValue(null);
         tfCardNum.setText("");
         dpExp.setValue(null);
@@ -308,16 +307,16 @@ public class BancoController {
         cbType.setValue(null);
     }
 
-    public void limpiarBuyTab(){
+    public void limpiarBuyTab() {
         dpDate.setValue(null);
         tfMonto.setText("");
         taDescription.setText("");
         cbCard.setValue(null);
     }
 
-    public void insertCustomers(){//00088023 Método encargado de realizar la validación de datos y de insertar nuevos clientes
+    public void insertCustomers() {//00088023 Método encargado de realizar la validación de datos y de insertar nuevos clientes
         Alert alert = new Alert(Alert.AlertType.INFORMATION);//00088023 Se inicializa una alerta
-        if (tfNames.getText().isEmpty() || tfLastNames.getText().isEmpty() || tfAdress.getText().isEmpty() || tfTelephone.getText().isEmpty()){ //00088023 Verifica que ningún campo se encuentre vacio
+        if (tfNames.getText().isEmpty() || tfLastNames.getText().isEmpty() || tfAdress.getText().isEmpty() || tfTelephone.getText().isEmpty()) { //00088023 Verifica que ningún campo se encuentre vacio
             alert.setAlertType(Alert.AlertType.WARNING); //00088023 En el caso de que alguno se encuentre vacio, informa mediante una alerta
             alert.setHeaderText(null);
             alert.setTitle("Campos incompletos");
@@ -330,10 +329,10 @@ public class BancoController {
         fillTablaClientes(); //00042823 Actualiza la tabla de clientes con el nuevo registro
     }
 
-    public void insertCard(){ //00088023 Método encargado de verificar y agregar nuevas tarjetas
+    public void insertCard() { //00088023 Método encargado de verificar y agregar nuevas tarjetas
         Insert insert = Insert.getInstance(); //00088023 Solicita una instancia de la clase Insert
         Alert alert = new Alert(Alert.AlertType.WARNING);//00088023 Inicializa una alerta
-        if (dpExp.getValue() == null || cbOwner.getValue() == null || tfCardNum.getText().isEmpty() || cbProvider.getValue() == null || cbType.getValue() == null){//00088023 Verifica que ningún campo se encuentre vacio
+        if (dpExp.getValue() == null || cbOwner.getValue() == null || tfCardNum.getText().isEmpty() || cbProvider.getValue() == null || cbType.getValue() == null) {//00088023 Verifica que ningún campo se encuentre vacio
             alert.setHeaderText(null);//00088023 Si alguno esta vacio, se le hace saber al usuario mediante una alerta
             alert.setTitle("Campos incompletos");
             alert.setContentText("Por favor complete los campos incompletos");
@@ -342,7 +341,7 @@ public class BancoController {
         }
 
         String[] cardNum = tfCardNum.getText().split(" ");//00088023 Toma el número de tarjeta ingresada en el textfield y lo divide separándolos por espacios para confirmar el formato de la tarjeta
-        if (cardNum.length != 4){//00088023 verifíca si la tarjeta está separada por espacios es igual a 4 (por el formato de las tarjetas)
+        if (cardNum.length != 4) {//00088023 verifíca si la tarjeta está separada por espacios es igual a 4 (por el formato de las tarjetas)
             alert.setAlertType(Alert.AlertType.WARNING);//00088023 Si no cumple con el formato, se lo hace saber al usuario
             alert.setHeaderText(null);
             alert.setTitle("Formato de tarjeta incorrecto");
@@ -369,7 +368,8 @@ public class BancoController {
                     Facilitador.valueOf(cbProvider.getValue()));
             fillTablaTarjetas(); //00042823 Actualiza la tabla una vez agregado el registro
 
-        }catch (Exception e){//00088023 Si un error ocurre (principalmente de meter letras donde deben ir números) Se lo hace saber al usuario y no inserta los datos
+        } catch (
+                Exception e) {//00088023 Si un error ocurre (principalmente de meter letras donde deben ir números) Se lo hace saber al usuario y no inserta los datos
             e.printStackTrace();
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setTitle("Formato de datos incorrecto");
@@ -379,10 +379,10 @@ public class BancoController {
         }
     }
 
-    public void insertCompra(){//00088023 Método encargado de verificar e insertar los datos de compras
+    public void insertCompra() {//00088023 Método encargado de verificar e insertar los datos de compras
         Alert alert = new Alert(Alert.AlertType.INFORMATION);//00088023 Se inicializa una alerta
         Insert insert = Insert.getInstance();//00088023 Se obtiene una instancia de la clase insert
-        if (dpDate.getValue() == null || tfMontoCompra.getText().isEmpty() || taDescription.getText().isEmpty() || cbCard.getValue() == null){//00088023 Verifica si los campos están vacios
+        if (dpDate.getValue() == null || tfMontoCompra.getText().isEmpty() || taDescription.getText().isEmpty() || cbCard.getValue() == null) {//00088023 Verifica si los campos están vacios
             alert.setAlertType(Alert.AlertType.WARNING);//00088023 Si alguno está vacio, entonces se lo hace saber al usuario
             alert.setHeaderText(null);
             alert.setTitle("Campos incompletos");
@@ -391,9 +391,9 @@ public class BancoController {
             return;//00088023 Termina el método
         }
         try {
-            insert.registrarCompra(Date.valueOf(dpDate.getValue()), Double.parseDouble(tfMontoCompra.getText()),taDescription.getText(), Integer.parseInt(String.valueOf(cbCard.getValue().charAt(0))));//00088023 Agrega los datos de los campos a la tabla de compras
+            insert.registrarCompra(Date.valueOf(dpDate.getValue()), Double.parseDouble(tfMontoCompra.getText()), taDescription.getText(), Integer.parseInt(String.valueOf(cbCard.getValue().charAt(0))));//00088023 Agrega los datos de los campos a la tabla de compras
             fillTablaCompras(); //00042823 Actualiza la tabla de compras con el nuevo registro
-        } catch (Exception e){//00088023 Si hubo un error con el formato de los datos, se lo hace saber al usuario
+        } catch (Exception e) {//00088023 Si hubo un error con el formato de los datos, se lo hace saber al usuario
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             alert.setTitle("Error");
@@ -402,16 +402,16 @@ public class BancoController {
         }
     }
 
-    public void initializeBuyTab(){//00088023 Método encargado de inicializar los choice box al abrir la pestaña de agregar compras
+    public void initializeBuyTab() {//00088023 Método encargado de inicializar los choice box al abrir la pestaña de agregar compras
         Select select = Select.getInstance();//00088023 solicita una instancia de select
         ArrayList<String> tarjetas = new ArrayList<>();//00088023 Crea una arraylist donde se guardarán las tarjetas habidas
         String[] digitos;//00088023 Se crea un array de strings donde serán separadas las tarjetas
         String censored;//00088023 String final donde se encontrarán las tarjetas censuradas
-        for (Tarjeta tarjeta : select.selectTarjeta()){//00088023 Recorre la lista de tarjetas almacenadas en la base de datos
+        for (Tarjeta tarjeta : select.selectTarjeta()) {//00088023 Recorre la lista de tarjetas almacenadas en la base de datos
             censored = "";//00088023 Inicializa por cada iteración el string censored
             digitos = tarjeta.getNumeroTarjeta().split(" ");//00088023 Separa la tarjeta por espacios
-            for (int i = 0; i < digitos.length; i++){//00088023 recorre la tarjeta separada
-                if (i == digitos.length -1){
+            for (int i = 0; i < digitos.length; i++) {//00088023 recorre la tarjeta separada
+                if (i == digitos.length - 1) {
                     censored = censored.concat(digitos[i]);//00088023 Si el conjunto de dígitos es el último, ingresa los dígitos sin censura
                 } else {
                     censored = censored.concat("XXXX ");//00088023 Si es cualquier otro conjunto de dígitos, entonces los censura
@@ -425,7 +425,8 @@ public class BancoController {
         ObservableList<String> itemsToRender = FXCollections.observableArrayList(cbCard.getItems());//00088023 Se prepara el observable list
         cbCard.setItems(itemsToRender);//00088023 Se muestran los objetos en la choice box
     }
-    public void initializeCardTab(){//00088023 método encargado de inicializar las choice box de la tab de agregar tarjetas
+
+    public void initializeCardTab() {//00088023 método encargado de inicializar las choice box de la tab de agregar tarjetas
         Select select = Select.getInstance();//00088023 solicita una instancia de select
         //00088023 Se limpian los registros para evitar acumulación de información
         cbOwner.getItems().clear();
@@ -446,15 +447,13 @@ public class BancoController {
 
         boolean flag = false; //00021223 Bandera para validar
 
-        try{ //00042823 Nueva validación, que el ID sea un entero
+        try { //00042823 Nueva validación, que el ID sea un entero
             Integer.parseInt(tfIdClienteRA.getText()); //00042823 Hace la transformación solo para ver si lanza una excepción
-        }
-        catch (NumberFormatException e) { //00042823 Si se lanza la excepción, entonces...
+        } catch (NumberFormatException e) { //00042823 Si se lanza la excepción, entonces...
 
             if (tfIdClienteRA.getText().isEmpty()) { //00021223 valida si el textfield de clienteID esta vacio
                 errorLabel1.setText("Campo obligatorio");
-            }
-            else {
+            } else {
                 errorLabel1.setText("Ingrese un ID válido");
             }
             errorLabel1.setVisible(true); //00021223 si esta vacion se hace visible el primer control de seleccion
@@ -514,8 +513,7 @@ public class BancoController {
         } catch (NumberFormatException e) { //00042823 Se atrapa la excepción, si ocurre
             if (tfIdClienteRB.getText().isEmpty()) { //00042823 Se verifica si el usuario llenó el campo
                 errorLabel4.setText("Campo obligatorio"); //00042823 El usuario no llenó el campo
-            }
-            else {
+            } else {
                 errorLabel4.setText("Ingrese un año válido"); //00042823 Establece el tipo de error
             }
             errorLabel4.setVisible(true); //00042823 Se hace visible el label
@@ -539,8 +537,7 @@ public class BancoController {
         } catch (NumberFormatException e) { //00042823 Se atrapa la excepción, si ocurre
             if (tfAnio.getText().isEmpty()) { //00042823 Si el campo está vacío
                 errorLabel6.setText("Campo obligatorio"); //00042823 Y también se le olvidó llenar este campo
-            }
-            else { //00042823 Entonces, el usuario ingreso algo que no es un número
+            } else { //00042823 Entonces, el usuario ingreso algo que no es un número
                 errorLabel6.setText("Ingrese un año válido"); //00042823 Establece el tipo de error
             }
             errorLabel6.setVisible(true); //00042823 Se hace visible el label
@@ -563,7 +560,7 @@ public class BancoController {
 
             if (totalGasto != -1) { //00042823 Si el gasto es -1, entonces el cliente no existe
                 taMuestraReporte.setText(text);
-                TextFiles.createFile('A', text); //TODO: Comentar (Rocía)
+                TextFiles.createFile('B', text); //00022423 se llama al metodo para generar el reporte A
             } else { //00042823 Si, en efecto, no hay nada que reportar, pues entonces no se crea el reporte (¿para qué tener un .txt vacío?)
                 taMuestraReporte.setText("Nada que reportar..."); //00042823 Muestra en el TextArea que no hay nada que reportar
             }
@@ -650,7 +647,8 @@ public class BancoController {
                     } else { //00042823 Si ya no hay filas por recorrer en el ResultSet
                         flag = true; //00042823 Se levanta la bandera
 
-                        DataBase dataBase = new DataBase() {}; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
+                        DataBase dataBase = new DataBase() {
+                        }; //00042823 Se instancia la clase abstracta (this is so wrong) para poder tener acceso a la conexión de la base de datos
                         dataBase.getConnection().close(); //00042823 Se cierra la conexión, que quedaba abierta por usar el ResultSet
                     }
                 }
@@ -708,8 +706,13 @@ public class BancoController {
 
             try {
 
+                Cliente cliente = null; //00021223 se inicializa un cliente nulo
 
-                Cliente cliente = Select.getInstance().selectCliente().get(Integer.parseInt(tfClienteID.getText()) - 1); //00021223 se obtiene el cliente que se ha seleccionado
+                for(Cliente cliente1 : Select.getInstance().selectCliente()) { //00021223 se recorre la lista que retorna el select
+                    if(cliente1.getId() == Integer.parseInt(tfClienteID.getText())) { //00021223 se valida si el ID coincide con el texfield
+                        cliente = cliente1; //00021223 se almacena el cliente que coincide con el ID del textfield
+                    }
+                }
 
                 tfNombresCliente.setDisable(false); //00021223 si coincide activa de nuevo todos los textfield de campos
                 tfApellidosClientes.setDisable(false);
@@ -717,11 +720,11 @@ public class BancoController {
                 tfTelefonoClientes.setDisable(false);
                 btnActualizarRegistroCliente.setDisable(false); //00021223 activa tambien el boton de actualizar registro de cliente
 
-                tfNombresCliente.setPromptText(cliente.getNombres()); //00021223 settea un prompt para el textfield de nombres con el nombre del cliente seleccionado
-                tfApellidosClientes.setPromptText(cliente.getApellidos()); //00021223 settea un prompt para el textfield de apellidos con el apellido del cliente seleccionado
-                tfDireccionClientes.setPromptText(cliente.getDireccion()); //00021223 settea un prompt para el textfield de direccion con la direccion del cliente seleccionado
-                tfTelefonoClientes.setPromptText(cliente.getTelefono()); //00021223 settea un prompt para el textfield de telefono con el telefono del cliente seleccionado
-            }catch (Exception e){
+                tfNombresCliente.setText(cliente.getNombres()); //00021223 settea un prompt para el textfield de nombres con el nombre del cliente seleccionado
+                tfApellidosClientes.setText(cliente.getApellidos()); //00021223 settea un prompt para el textfield de apellidos con el apellido del cliente seleccionado
+                tfDireccionClientes.setText(cliente.getDireccion()); //00021223 settea un prompt para el textfield de direccion con la direccion del cliente seleccionado
+                tfTelefonoClientes.setText(cliente.getTelefono()); //00021223 settea un prompt para el textfield de telefono con el telefono del cliente seleccionado
+            } catch (Exception e) {
                 mostrarAlerta("Error", "Ingrese un ID válido");
             }
         }
@@ -762,6 +765,8 @@ public class BancoController {
             //para ejecutar la query de update cliente en la base de datos, se le pasa cada uno de los valores nuevos de cada campo y el ID
             //del cliente que se debe actualizar
 
+            fillTablaClientes();
+
             tfClienteID.setText(""); //00021223 se settea cada textfield de campos con una cadena vacia
             tfNombresCliente.setText("");
             tfApellidosClientes.setText("");
@@ -784,6 +789,9 @@ public class BancoController {
     @FXML
     public void seleccionarRegistroTarjeta() { //00021223 metodo de accion para el boton de seleccionar registro en la pestaña de actualizar tarjeta
 
+        cbTipoTarjeta.getItems().clear();
+        cbFacilitador.getItems().clear();
+
         campoObligatorioUpdateTarjeta1.setVisible(false); //00021223 se settea en false el control de seleccion de la tarjetaID
 
         boolean flag = false; //00021223 se inicializa abajo una bandera
@@ -797,7 +805,14 @@ public class BancoController {
 
             try {
 
-                Tarjeta tarjeta = Select.getInstance().selectTarjeta().get(Integer.parseInt(tfTarjetaID.getText()) - 1); //00021223 se obtiene la tarjeta que se ha seleccionado por el ID
+                Tarjeta tarjeta = null; //00021223 se inicializa una tarjeta nula
+
+                for (Tarjeta tarjeta1 : Select.getInstance().selectTarjeta()) { //00021223 se recorre la lista que retorna la consulta
+                    if (tarjeta1.getId() == Integer.parseInt(tfTarjetaID.getText())) { //00021223 se valia si el ID de la tarjeta coincide con el del textfield
+                        tarjeta = tarjeta1; //00021223 se almacena la coincidencia en la variable tarjeta
+                        break;
+                    }
+                }
 
                 tfNumeroTarjeta.setDisable(false); //00021223 se activan el textfield de numero tarjeta
                 tfIDCliente.setDisable(false); //00021223 se activa el textield de clienteID
@@ -807,9 +822,9 @@ public class BancoController {
                 btnActualizarTarjeta.setDisable(false); //00021223 se activa el boton de actualizar registro de tarjetas
 
                 assert tarjeta != null; //00021223 control de excepcion
-                tfNumeroTarjeta.setPromptText(tarjeta.getNumeroTarjeta()); //00021223 se settea como prompt la informacion almacenada del objeto para cada textfield
+                tfNumeroTarjeta.setText(tarjeta.getNumeroTarjeta()); //00021223 se settea como prompt la informacion almacenada del objeto para cada textfield
                 dpFechaExpiracion.setPromptText(String.valueOf(tarjeta.getFechaExpiracion()));
-                tfIDCliente.setPromptText(String.valueOf(tarjeta.getClienteID()));
+                tfIDCliente.setText(String.valueOf(tarjeta.getClienteID()));
 
                 cbTipoTarjeta.getItems().addAll(TipoTarjeta.Credito, TipoTarjeta.Debito); //00021223 se carga una lista de tipos de tarjeta como items del combobox
                 ObservableList<TipoTarjeta> itemsTipo = FXCollections.observableArrayList(cbTipoTarjeta.getItems()); //00021223 se crea la lista observable
@@ -871,6 +886,8 @@ public class BancoController {
             //para ejecutar la query de update tarjeta en la base de datos, se le pasa cada uno de los valores nuevos de cada campo y el ID
             //de la tarjeta que se debe actualizar
 
+            fillTablaTarjetas();
+
             tfTarjetaID.setText(""); //00021223 se settean los text y prompts de los componentes
             tfNumeroTarjeta.setText("");
             tfIDCliente.setText("");
@@ -901,19 +918,30 @@ public class BancoController {
 
         if (!flag) { //00021223 se valida si la bandera esta abajo
 
-            Compra compra = Select.getInstance().selectCompra().get(Integer.parseInt(tfCompraID.getText()) - 1); //00021223 se obtiene el registro de compra seleccionado por el ID
+            Compra compra = null; //00021223 se inicializa una commpra nula
 
-            dpFechaCompra.setDisable(false); //00021223 se activan todos los componentes
-            tfIDTarjeta.setDisable(false);
-            tfMonto.setDisable(false);
-            tfConcepto.setDisable(false);
-            btnActualizarCompra.setDisable(false); //00021223 tambien se activa el boton
+            try {
+                for (Compra compra1 : Select.getInstance().selectCompra()) { //00021223 se recorre la lista de compras que retorna la consulta
+                    if (compra1.getCodigo() == Integer.parseInt(tfCompraID.getText())) { //00021223 se valida si un ID de compras coincide con el textfield
+                        compra = compra1; //00021223 se almacena la compra
+                    }
+                }
 
-            dpFechaCompra.setPromptText(compra.getFechaCompra().toString()); //00021223 se settea un prompt para todos los componentes con los datos del registro seleccionado
-            tfMonto.setPromptText(String.valueOf(compra.getMonto()));
-            tfConcepto.setPromptText(compra.getDescripcion());
-            tfIDTarjeta.setPromptText(String.valueOf(compra.getTarjetaID()));
+                dpFechaCompra.setDisable(false); //00021223 se activan todos los componentes
+                tfIDTarjeta.setDisable(false);
+                tfMonto.setDisable(false);
+                tfConcepto.setDisable(false);
+                btnActualizarCompra.setDisable(false); //00021223 tambien se activa el boton
 
+                assert compra != null;
+                dpFechaCompra.setPromptText(compra.getFechaCompra().toString()); //00021223 se settea un prompt para todos los componentes con los datos del registro seleccionado
+                tfMonto.setText(String.valueOf(compra.getMonto()));
+                tfConcepto.setText(compra.getDescripcion());
+                tfIDTarjeta.setText(String.valueOf(compra.getTarjetaID()));
+
+            } catch (NullPointerException e) {
+                mostrarAlerta("Error", "Error en la seleccion de la compra");
+            }
         }
     }
 
@@ -974,15 +1002,15 @@ public class BancoController {
         lvClienteNumTelefono.getItems().clear(); //00042823 de
         lvClienteDireccion.getItems().clear(); //00042823 clientes
 
-        for(Cliente c : Select.getInstance().selectCliente()){ //00042823 Con la colección de clientes, por cada uno de los que exista...
+        for (Cliente c : Select.getInstance().selectCliente()) { //00042823 Con la colección de clientes, por cada uno de los que exista...
             lvClienteID.getItems().add(c.getId()); //00042823 ... Agrega el ID del cliente al ListView...
             lvClienteApellidos.getItems().add(c.getApellidos()); //00042823 ... Y los apellidos del cliente a otra ListView...
             lvClienteNombres.getItems().add(c.getNombres()); //00042823 ... Y los nombres del cliente...
 
-            if (c.getDireccion() == null){ //00042823 No debería de haber nulos, pero es una columna que se agregó después, así que solo por eso...
+            if (c.getDireccion() == null) { //00042823 No debería de haber nulos, pero es una columna que se agregó después, así que solo por eso...
                 lvClienteDireccion.getItems().add("No hay dirección guardada"); //00042823 Si la dirección es nula, entonces se mete este texto en vez de mostrar la dirección
-            }
-            else lvClienteDireccion.getItems().add(c.getDireccion()); //00042823 En caso de que no sea nula (como debe ser), muestra la dirección...
+            } else
+                lvClienteDireccion.getItems().add(c.getDireccion()); //00042823 En caso de que no sea nula (como debe ser), muestra la dirección...
 
             lvClienteNumTelefono.getItems().add(c.getTelefono()); //00042823 Ya de último se agrega el teléfono del cliente
         }
@@ -996,7 +1024,7 @@ public class BancoController {
         lvTarjetaFacilitador.getItems().clear(); //00042823 de
         lvTarjetaTipo.getItems().clear(); //00042823 tarjetas
 
-        for(Tarjeta t : Select.getInstance().selectTarjeta()){ //00042823 Se obtiene la lista de tarjetas y por cada uno de los elementos en la lista...
+        for (Tarjeta t : Select.getInstance().selectTarjeta()) { //00042823 Se obtiene la lista de tarjetas y por cada uno de los elementos en la lista...
             lvTarjetaID.getItems().add(t.getId()); //00042823 ... Se agrega el ID a la primera columna de la tabla (el ListView)...
             lvTarjetaClienteID.getItems().add(t.getClienteID()); //00042823 ... Se agrega el ID del cliente (sería mejor con el nombre completo del cliente, pero así se va) a la segunda columna...
             lvTarjetaNum.getItems().add(t.getNumeroTarjeta()); //00042823 ... Se agrega el número de tarjeta, sin censurar...
@@ -1006,14 +1034,14 @@ public class BancoController {
         }
     }
 
-    private void fillTablaCompras(){ //00042823 Función para llenar la tabla de compras en la interfaz
+    private void fillTablaCompras() { //00042823 Función para llenar la tabla de compras en la interfaz
         lvCompraID.getItems().clear(); //00042823 Limpia
         lvCompraFecha.getItems().clear(); //0004223 la
         lvCompraTarjetaID.getItems().clear(); //00042823 tabla
         lvCompraMonto.getItems().clear(); //00042823 de
         lvCompraDescripcion.getItems().clear(); //00042823 compras
 
-        for(Compra c : Select.getInstance().selectCompra()){
+        for (Compra c : Select.getInstance().selectCompra()) {
             lvCompraID.getItems().add(c.getCodigo());
             lvCompraFecha.getItems().add(c.getFechaCompra());
             lvCompraMonto.getItems().add(c.getMonto());
@@ -1038,6 +1066,8 @@ public class BancoController {
                     // 000224234 Llama al método deleteCliente de la instancia de Delete para eliminar el cliente
                     // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
                     exito = Delete.getInstance().deleteCliente(id);
+
+                    fillTablaClientes();
                     break;
                 case "Tarjeta":
                     // 00022423 Obtiene el ID de la tarjeta desde el campo de texto correspondiente y lo convierte a entero
@@ -1045,6 +1075,8 @@ public class BancoController {
                     // 00022423 Llama al método deleteTarjeta de la instancia de Delete para eliminar la tarjeta
                     // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
                     exito = Delete.getInstance().deleteTarjeta(id);
+
+                    fillTablaTarjetas();
                     break;
                 case "Compra":
                     // 00022423 Obtiene el ID de la compra desde el campo de texto correspondiente y lo convierte a entero
@@ -1052,6 +1084,8 @@ public class BancoController {
                     // 00022423 Llama al método deleteCompra de la instancia de Delete para eliminar la compra
                     // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
                     exito = Delete.getInstance().deleteCompra(id);
+
+                    fillTablaCompras();
                     break;
             }
 
