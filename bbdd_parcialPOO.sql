@@ -68,7 +68,6 @@ insert into Compra values (1, '2025-01-12', 18.35, 'Starbucks', 8),
 (10, '2025-01-01', 25.00, 'Regalo de abuela', 7),
 (11, '2024-10-05', 12.12, 'Pago de libro', 5);
 
-
 -- Consulta para reporte A (Parámetros: id de cliente, rango de fechas)
 select c.* from Compra c inner join Tarjeta t on t.id = c.tarjetaID
 inner join Cliente on t.ClienteID = Cliente.id 
@@ -87,10 +86,11 @@ select numTarjeta from Tarjeta
 where tipo like 'Debito' and ClienteID = 1;
 
 -- Consulta para reporte D (Parámetros: facilitador)
-with TarjetaIDS (id) as 
-(select t.id from Tarjeta t inner join Facilitador f on t.facilitadorID = f.id where f.facilitador = 'Visa'),
-ComprasCliente (id) as 
-(select t.id from Compra c inner join TarjetaIDS t on t.id = c.tarjetaID group by t.id),
-Clientes (id) as
-(select c.clienteID from ComprasCliente t inner join Tarjeta c on t.id = c.id)
-select * from Cliente c inner join Clientes t on t.id = c.id;
+with TarjetaIDS (id) 
+(select t.id from Tarjeta t inner join Facilitador f on t.facilitadorID = f.id where f.facilitador = ?),
+ComprasCliente (id, numCompras, totalGastado) ass
+(select t.id, count(c.id), sum(c.monto) from Compra c inner join TarjetaIDS t on t.id = c.tarjetaID group by t.id),
+Clientes (id, compras, total) as
+(select c.clienteID, t.numCompras, t.totalGastado from ComprasCliente t inner join Tarjeta c on t.id = c.id)
+select c.id, c.nombres, c.apellidos, c.numTelefono, t.compras, t.total
+from Cliente c inner join Clientes t on t.id = c.id
