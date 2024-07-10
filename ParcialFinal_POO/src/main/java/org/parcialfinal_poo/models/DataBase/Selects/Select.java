@@ -1,11 +1,15 @@
 package org.parcialfinal_poo.models.DataBase.Selects;
 
+import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Cliente;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
 import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 
+import javax.xml.validation.SchemaFactoryConfigurationError;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -147,5 +151,38 @@ public class Select extends DataBaseSelect {
             return null; //00021223 si ocurre una excepcion, retorna una lista de compras nula
         }
 
+    }
+
+    public ArrayList<String> selectCustomers(){//00088023 Método para regresar un arrayList con el id y los nombres de los clientes
+        ArrayList<String> customers = new ArrayList<>();//00088023 Se inicializa el array a retornar
+        Connection connection = null;//00088023 Se inicializa la conexión como null
+
+        try {
+            connection = getConnection(); //00088023 Se inicializa la conexión
+            Statement stm = connection.createStatement();//00088023 Se prepara un statement
+            ResultSet rs = stm.executeQuery("select id, nombres from Cliente"); //00088023 Se hace la query del ID y los nombres
+
+            while (rs.next()){//00088023 Mientras el result set tenga datos, entonces agregara los datos al arrayList
+                customers.add(rs.getString("id") + " " + rs.getString("nombres"));
+            }
+
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR); //00088023 En caso de que algo haya salido mal, entonces avisa con una alerta
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText("Error al realizar la query");
+            alert.showAndWait();
+            System.out.println(e.getMessage());
+        }
+        finally {
+            if(connection != null){
+                try{
+                    connection.close(); //00088023 Finalmente si la conexión fue exitosa, cierra la conexión
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return customers; //00088023 retorna el array cargado de los clientes.
     }
 }

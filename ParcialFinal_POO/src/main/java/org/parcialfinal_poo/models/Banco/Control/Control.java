@@ -33,7 +33,7 @@ public class Control { //00021223 esta clase solo es para llevar el control de l
     //todo temporal, tal vez se elimine si no se usa
     public void loadClientes() {
         //00021223 metodo para cargar todos los clientes registrados en la bbdd en el sistema
-
+        clientes.clear();
         Select select = Select.getInstance(); //00021223 se obtiene la instancia de select para obtener todos los registros
         //con cada uno de sus campos
 

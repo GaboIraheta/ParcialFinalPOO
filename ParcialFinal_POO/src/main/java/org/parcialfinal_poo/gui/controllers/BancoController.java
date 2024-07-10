@@ -6,7 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
+import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
+import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
 import org.parcialfinal_poo.models.DataBase.DataBase;
+import org.parcialfinal_poo.models.DataBase.Inserts.Insert;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.*;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import static java.sql.DriverManager.getConnection;
 
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
+import org.parcialfinal_poo.models.DataBase.Selects.Select;
 import org.parcialfinal_poo.models.TextFiles.TextFiles;
 
 import java.sql.Date;
@@ -54,10 +58,10 @@ public class BancoController {
     private DatePicker dpFechaFinal;
 
     @FXML
-    private DatePicker dpFechaFinalRB;
+    private DatePicker dpFechaFinalRB, dpExp, dpDate;
 
     @FXML
-    private TextField tfIdClienteRA;
+    private TextField tfIdClienteRA, tfMonto;
 
     @FXML
     private TextField tfIdClienteRB;
@@ -72,10 +76,16 @@ public class BancoController {
     private TextField tfAnio;
 
     @FXML
-    private TextArea taMuestraReporte;
+    private TextArea taMuestraReporte, taDescription;
 
     @FXML
     private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
+
+    @FXML
+    private TextField tfNames, tfLastNames, tfAdress, tfTelephone, tfCardNum;
+
+    @FXML
+    private ChoiceBox<String> cbOwner, cbProvider, cbType, cbCard;
 
 
     @FXML
@@ -96,6 +106,124 @@ public class BancoController {
         cbMes.setItems(FXCollections.observableArrayList("enero",
                 "febrero", "marzo", "abril", "mayo", "junio", "agosto",
                 "septiembre", "octubre", "noviembre", "diciembre"));
+    }
+
+    public void insertCustomers(){//00088023 Método encargado de realizar la validación de datos y de insertar nuevos clientes
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);//00088023 Se inicializa una alerta
+        if (tfNames.getText().isEmpty() || tfLastNames.getText().isEmpty() || tfAdress.getText().isEmpty() || tfTelephone.getText().isEmpty()){ //00088023 Verifica que ningún campo se encuentre vacio
+            alert.setAlertType(Alert.AlertType.WARNING); //00088023 En el caso de que alguno se encuentre vacio, informa mediante una alerta
+            alert.setHeaderText(null);
+            alert.setTitle("Campos incompletos");
+            alert.setContentText("Por favor complete los campos incompletos");
+            alert.showAndWait();
+            return; //00088023 Termina la función para que no intente agregar
+        }
+
+        Insert.getInstance().registrarCliente(tfNames.getText(), tfLastNames.getText(), tfAdress.getText(), tfTelephone.getText()); //00088023 Toma los datos de los campos e ingresa al nuevo cliente
+        alert.setTitle("Ingreso Realizado"); //00088023 Crea la alerta para confirmar el ingreso del nuevo cliente
+        alert.setHeaderText(null);
+        alert.setContentText("Se ha agregado un cliente exitosamente");
+        alert.showAndWait();
+
+    }
+
+    public void insertCard(){ //00088023 Método encargado de verificar y agregar nuevas tarjetas
+        Insert insert = Insert.getInstance(); //00088023 Solicita una instancia de la clase Insert
+        Alert alert = new Alert(Alert.AlertType.WARNING);//00088023 Inicializa una alerta
+        if (dpExp.getValue() == null || cbOwner.getValue() == null || tfCardNum.getText().isEmpty() || cbProvider.getValue() == null || cbType.getValue() == null){//00088023 Verifica que ningún campo se encuentre vacio
+            alert.setHeaderText(null);//00088023 Si alguno esta vacio, se le hace saber al usuario mediante una alerta
+            alert.setTitle("Campos incompletos");
+            alert.setContentText("Por favor complete los campos incompletos");
+            alert.showAndWait();
+            return;//00088023 Termina el método
+        }
+
+        String[] cardNum = tfCardNum.getText().split(" ");//00088023 Toma el número de tarjeta ingresada en el textfield y lo divide separándolos por espacios para confirmar el formato de la tarjeta
+        if (cardNum.length != 4){//00088023 verifíca si la tarjeta está separada por espacios es igual a 4 (por el formato de las tarjetas)
+            alert.setAlertType(Alert.AlertType.WARNING);//00088023 Si no cumple con el formato, se lo hace saber al usuario
+            alert.setHeaderText(null);
+            alert.setTitle("Formato de tarjeta incorrecto");
+            alert.setContentText("El formato de la tarjeta ingresada no es válida");
+            alert.showAndWait();
+            return;//00088023 termina el método
+        }
+
+        for (String s : cardNum) {//00088023 Bucle que busca verificar si cada separación de la tarjeta posee exactamente 4 dígitos
+            if (s.length() != 4) {
+                alert.setAlertType(Alert.AlertType.WARNING);//00088023 En el caso que no, se lo hace saber al usuario mediante una alerta
+                alert.setHeaderText(null);
+                alert.setTitle("Formato de tarjeta incorrecto");
+                alert.setContentText("El formato de la tarjeta ingresada no es válida");
+                alert.showAndWait();
+                return;//00088023 Termina la función
+            }
+        }
+
+        try {
+            insert.registrarTarjeta(Integer.parseInt(String.valueOf(cbOwner.getValue().charAt(0))), tfCardNum.getText(),
+                    Date.valueOf(dpExp.getValue()), TipoTarjeta.valueOf(cbType.getValue()),
+                    Facilitador.valueOf(cbProvider.getValue()));
+            //00088023 Si pasa todas las verificaciones, entonces toma los datos de los campos y los inserta a la base de datos
+
+        }catch (Exception e){//00088023 Si un error ocurre (principalmente de meter letras donde deben ir números) Se lo hace saber al usuario y no inserta los datos
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Formato de datos incorrecto");
+            alert.setHeaderText(null);
+            alert.setContentText("El formato de algún dato ingresado no es válido");
+            alert.showAndWait();
+        }
+    }
+
+    public void insertCompra(){//00088023 Método encargado de verificar e insertar los datos de compras
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);//00088023 Se inicializa una alerta
+        Insert insert = Insert.getInstance();//00088023 Se obtiene una instancia de la clase insert
+        if (dpDate.getValue() == null || tfMonto.getText().isEmpty() || taDescription.getText().isEmpty() || cbCard.getValue() == null){//00088023 Verifica si los campos están vacios
+            alert.setAlertType(Alert.AlertType.WARNING);//00088023 Si alguno está vacio, entonces se lo hace saber al usuario
+            alert.setHeaderText(null);
+            alert.setTitle("Campos incompletos");
+            alert.setContentText("Por favor complete los campos incompletos");
+            alert.showAndWait();
+            return;//00088023 Termina el método
+        }
+        try {
+            insert.registrarCompra(Date.valueOf(dpDate.getValue()), Double.parseDouble(tfMonto.getText()),taDescription.getText(), Integer.parseInt(String.valueOf(cbCard.getValue().charAt(0))));//00088023 Agrega los datos de los campos a la tabla de compras
+        } catch (Exception e){//00088023 Si hubo un error con el formato de los datos, se lo hace saber al usuario
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText("Algunos datos no cumplen el formato\n\nNota: el monto no debe llevar el símbolo de dolar. Ejemplo: 23.50");
+            alert.showAndWait();
+        }
+    }
+
+    public void initializeBuyTab(){//00088023 Método encargado de inicializar los choice box al abrir la pestaña de agregar compras
+        Select select = Select.getInstance();//00088023 solicita una instancia de select
+        ArrayList<String> tarjetas = new ArrayList<>();//00088023 Crea una arraylist donde se guardarán las tarjetas habidas
+        String[] digitos;//00088023 Se crea un array de strings donde serán separadas las tarjetas
+        String censored;//00088023 String final donde se encontrarán las tarjetas censuradas
+        for (Tarjeta tarjeta : select.selectTarjeta()){//00088023 Recorre la lista de tarjetas almacenadas en la base de datos
+            censored = "";//00088023 Inicializa por cada iteración el string censored
+            digitos = tarjeta.getNumeroTarjeta().split(" ");//00088023 Separa la tarjeta por espacios
+            for (int i = 0; i < digitos.length; i++){//00088023 recorre la tarjeta separada
+                if (i == digitos.length -1){
+                    censored = censored.concat(digitos[i]);//00088023 Si el conjunto de dígitos es el último, ingresa los dígitos sin censura
+                } else {
+                    censored = censored.concat("XXXX ");//00088023 Si es cualquier otro conjunto de dígitos, entonces los censura
+                }
+            }
+            tarjetas.add(tarjeta.getId() + " " + censored); //00088023 Finalmente agrega el id de la tarjeta junto a la tarjeta censurada
+        }
+        cbCard.getItems().addAll(tarjetas);//00088023 Se establecen como objetos la lista de tarjetas ya censuradas
+        ObservableList<String> itemsToRender = FXCollections.observableArrayList(cbCard.getItems());//00088023 Se prepara el observable list
+        cbCard.setItems(itemsToRender);//00088023 Se muestran los objetos en la choice box
+    }
+    public void initializeCardTab(){//00088023 método encargado de inicializar las choice box de la tab de agregar tarjetas
+        Select select = Select.getInstance();//00088023 solicita una instancia de select
+        cbOwner.getItems().addAll(select.selectCustomers());//00088023 Agrega a la choiceBox todos los clientes con sus respetivos id
+        ObservableList<String> itemsToRender = FXCollections.observableArrayList(cbOwner.getItems());//00088023 Prepara la observable list
+        cbOwner.setItems(itemsToRender);//00088023 coloca los items en la choiceBox y los muestra
+        cbProvider.setItems(FXCollections.observableArrayList("Visa", "MasterCard", "American Express")); //00088023 Agrega y muestra los facilitadores a la choiceBox
+        cbType.setItems(FXCollections.observableArrayList("Credito", "Debito"));//00088023 Agrega y muestra los tipos de tarjeta a la choiceBox
     }
 
     private void mostrarReporteA() {
@@ -201,8 +329,7 @@ public class BancoController {
             }
 
             taMuestraReporte.setText(text);//00088023 Muestra el texto en el TextArea
-            TextFiles.createFile('C',text); //TODO: comentar
-
+            TextFiles.createFile('C',text); //00088023 Llama a la función para crear un archivo con el reporte
         } catch (Exception e) {
             mostrarAlerta("Error", "Ingrese un valor válido");//00088023 Este error se recibe por el parseInteger, por lo tanto el usuario ingreso un valor no válido
         }
