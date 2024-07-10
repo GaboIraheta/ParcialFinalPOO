@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class BancoApplication extends Application {
+    //Fixme RECORDAR CAMBIAR CREDENCIALES DE MYSQL PARA PODER PROBARLO, ESTAN EN LA CLASE DataBase
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BancoApplication.class.getResource("banco-view.fxml")); //00042823 Referencia al fxml de la aplicación
