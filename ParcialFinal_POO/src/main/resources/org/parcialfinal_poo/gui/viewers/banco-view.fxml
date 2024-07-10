@@ -65,7 +65,7 @@
                                                          </children>
                                                       </VBox>
                                                       <Button layoutX="349.0" layoutY="370.0" mnemonicParsing="false" onAction="#insertCustomers" onMouseClicked="#insertCustomers" prefHeight="28.0" prefWidth="119.0" text="Agregar Cliente" />
-                                                      <Button layoutX="500.0" layoutY="370.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="119.0" text="Limpiar" />
+                                                      <Button layoutX="500.0" layoutY="370.0" mnemonicParsing="false" onAction="#limpiarClienteTab" prefHeight="28.0" prefWidth="119.0" text="Limpiar" />
                                                    </children></AnchorPane>
                                              </content>
                                           </Tab>
@@ -147,7 +147,7 @@
                                                          </children>
                                                       </VBox>
                                                       <Button layoutX="525.0" layoutY="275.0" mnemonicParsing="false" onAction="#insertCard" prefHeight="25.0" prefWidth="126.0" text="Agregar Tarjeta" />
-                                                      <Button layoutX="675.0" layoutY="275.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Limpiar" />
+                                                      <Button layoutX="675.0" layoutY="275.0" mnemonicParsing="false" onAction="#limpiarCardTab" prefHeight="25.0" prefWidth="117.0" text="Limpiar" />
                                                    </children></AnchorPane>
                                              </content></Tab>
                                           <Tab closable="false" text="Actualizar registro">
@@ -220,7 +220,7 @@
                                                          </children>
                                                       </VBox>
                                                       <Button layoutX="544.0" layoutY="205.0" mnemonicParsing="false" onAction="#insertCompra" prefHeight="25.0" prefWidth="120.0" text="Agregar compra" />
-                                                      <Button layoutX="682.0" layoutY="205.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Limpiar" />
+                                                      <Button layoutX="682.0" layoutY="205.0" mnemonicParsing="false" onAction="#limpiarBuyTab" prefHeight="25.0" prefWidth="120.0" text="Limpiar" />
                                                    </children></AnchorPane>
                                              </content></Tab>
                                           <Tab closable="false" text="Actualizar registro">

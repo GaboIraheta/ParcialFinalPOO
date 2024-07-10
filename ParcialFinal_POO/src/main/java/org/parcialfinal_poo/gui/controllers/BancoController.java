@@ -108,6 +108,28 @@ public class BancoController {
                 "septiembre", "octubre", "noviembre", "diciembre"));
     }
 
+    public void limpiarClienteTab(){
+        tfNames.setText("");
+        tfLastNames.setText("");
+        tfAdress.setText("");
+        tfTelephone.setText("");
+    }
+
+    public void limpiarCardTab(){
+        cbOwner.setValue(null);
+        tfCardNum.setText("");
+        dpExp.setValue(null);
+        cbProvider.setValue(null);
+        cbType.setValue(null);
+    }
+
+    public void limpiarBuyTab(){
+        dpDate.setValue(null);
+        tfMonto.setText("");
+        taDescription.setText("");
+        cbCard.setValue(null);
+    }
+
     public void insertCustomers(){//00088023 Método encargado de realizar la validación de datos y de insertar nuevos clientes
         Alert alert = new Alert(Alert.AlertType.INFORMATION);//00088023 Se inicializa una alerta
         if (tfNames.getText().isEmpty() || tfLastNames.getText().isEmpty() || tfAdress.getText().isEmpty() || tfTelephone.getText().isEmpty()){ //00088023 Verifica que ningún campo se encuentre vacio
