@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import org.parcialfinal_poo.models.Banco.Compra;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.DataBase.DataBase;
+import org.parcialfinal_poo.models.DataBase.Deletes.Delete;
 import org.parcialfinal_poo.models.DataBase.QueriesReportes.Queries;
 
 import java.sql.*;
@@ -77,6 +78,11 @@ public class BancoController {
     @FXML
     private Label campoObligatorio1, campoObligatorio2, campoObligatorio3;
 
+    @FXML
+    private TextField txtIdClienteEliminar, txtIdTarjetaEliminar, txtIdCompraEliminar; //00022423 id necesarios para la operación delete
+    @FXML
+    private Button btnEliminarCliente, btnEliminarTarjeta, btnEliminarCompra; //00022423 id necesarios para conectar los botones con la operación delete
+
 
     @FXML
     // 00022423 Método que se ejecuta cuando la interfaz gráfica se inicializa
@@ -96,6 +102,29 @@ public class BancoController {
         cbMes.setItems(FXCollections.observableArrayList("enero",
                 "febrero", "marzo", "abril", "mayo", "junio", "agosto",
                 "septiembre", "octubre", "noviembre", "diciembre"));
+
+
+    }
+
+    // 00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar un cliente
+    @FXML
+    private void eliminarCliente() {
+        //00022423  Llama al método eliminarRegistro con el parámetro "Cliente" para indicar que se va a eliminar un cliente
+        eliminarRegistro("Cliente");
+    }
+
+    @FXML
+    //00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar una tarjeta
+    private void eliminarTarjeta() {
+        //00022423 Llama al método eliminarRegistro con el parámetro "Tarjeta" para indicar que se va a eliminar una tarjeta
+        eliminarRegistro("Tarjeta");
+    }
+
+    //00022423 Método que se ejecuta cuando se hace clic en el botón para eliminar una compra
+    @FXML
+    private void eliminarCompra() {
+        //00022423 Llama al método eliminarRegistro con el parámetro "Compra" para indicar que se va a eliminar una compra
+        eliminarRegistro("Compra");
     }
 
     private void mostrarReporteA() {
@@ -244,7 +273,7 @@ public class BancoController {
     }
 
     // 00022423 Método para mostrar una alerta con un título y mensaje específicos
-    private void mostrarAlerta(String titulo, String mensaje) {
+    public void mostrarAlerta(String titulo, String mensaje) {
         // 00022423 Crear una nueva alerta de tipo ERROR
         Alert alerta = new Alert(Alert.AlertType.ERROR);
         // 00022423 Establecer el título de la alerta con el valor pasado como parámetro
@@ -260,7 +289,7 @@ public class BancoController {
     public void handleBtnConsultar() { //00042823 Se define la función que se realizará cuando se haga una acción con btnGenerarReporte
         if (tabReporteA.isSelected()) {
             mostrarReporteA();
-        } else if (tabReporteB.isSelected()) {
+        } else if (tabReporteB.isSelected()) { //00022423Si la pestaña para el reporte B se encuentra activa
             mostrarReporteB();
         } else if (tabReporteC.isSelected()) {
             mostrarReporteC();
@@ -270,5 +299,67 @@ public class BancoController {
             //TODO: Crear una alerta, o bien un label error, ambas son opciones válidas
         }
 
+    }
+
+    //00022423 Método para eliminar registro de la base de datos
+    private void eliminarRegistro(String tipo) {
+        try {
+            // 00022423 Declaración de la variable para almacenar el ID del registro
+            int id;
+            // 00022423 Variable para indicar si la eliminación fue exitosa o no
+            boolean exito = false;
+            // 00022423 Estructura switch para determinar el tipo de registro a eliminar
+            switch (tipo) {
+                case "Cliente":
+                    // 00022423 Obtiene el ID del cliente desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdClienteEliminar.getText());
+                    // 000224234 Llama al método deleteCliente de la instancia de Delete para eliminar el cliente
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito = Delete.getInstance().deleteCliente(id);
+                    break;
+                case "Tarjeta":
+                    // 00022423 Obtiene el ID de la tarjeta desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdTarjetaEliminar.getText());
+                    // 00022423 Llama al método deleteTarjeta de la instancia de Delete para eliminar la tarjeta
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito = Delete.getInstance().deleteTarjeta(id);
+                    break;
+                case "Compra":
+                    // 00022423 Obtiene el ID de la compra desde el campo de texto correspondiente y lo convierte a entero
+                    id = Integer.parseInt(txtIdCompraEliminar.getText());
+                    // 00022423 Llama al método deleteCompra de la instancia de Delete para eliminar la compra
+                    // 00022423 La variable exito se actualiza con el resultado de la operación (true si se eliminó, false si no)
+                    exito =Delete.getInstance().deleteCompra(id);
+                    break;
+            }
+
+            if (exito) { // 00022423 Si la eliminación fue exitosa, muestra un mensaje de éxito
+                // 00022423 Crea una alerta de tipo información
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                //00022423 Establece el título de la alerta
+                alerta.setTitle("Eliminado");
+                // 00022423 Establece el encabezado de la alerta como nulo para que no haya encabezado
+                alerta.setHeaderText(null);
+                // 00022423 Establece el contenido del mensaje de la alerta con el tipo de registro eliminado
+                alerta.setContentText("Se ha eliminado el registro exitosamente");
+                //00022423 Muestra la alerta y espera hasta que el usuario la cierre
+                alerta.showAndWait();
+            } else {
+                //00022423 Muestra una alerta indicando que no se puedo eliminar el registro
+                mostrarAlerta("Error", "No se pudo eliminar el registro.");
+            }
+        } catch (NumberFormatException e) { // 00022423 Si se produce una excepción por formato de número (por ejemplo, si el ID no es un número válido)
+            // 00022423 Crea una alerta de tipo error
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            // 00022423 Establece el título de la alerta
+            alert.setTitle("Error");
+            // 00022423 Establece el encabezado de la alerta como nulo para que no haya encabezado
+            alert.setHeaderText(null);
+            // 00022423 Establece el contenido del mensaje de la alerta indicando que el ID no es válido
+            alert.setContentText("Error, ingrese un id valido");
+            // 00022423 Muestra la alerta y espera hasta que el usuario la cierre
+            alert.showAndWait();
+
+        }
     }
 }
