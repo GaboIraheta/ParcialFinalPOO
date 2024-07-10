@@ -330,9 +330,9 @@
                                           <Label layoutX="10.0" layoutY="118.0" text="Fecha inicial" />
                                           <DatePicker fx:id="dpFechaFinal" layoutX="10.0" layoutY="201.0" prefHeight="25.0" prefWidth="257.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="184.0" text="Fecha final" />
-                                          <Label fx:id="campoObligatorio1" layoutX="176.0" layoutY="97.0" text="Campo obligatorio" textFill="RED" />
-                                          <Label fx:id="campoObligatorio2" layoutX="176.0" layoutY="161.0" text="Campo obligatorio" textFill="RED" />
-                                          <Label fx:id="campoObligatorio3" layoutX="176.0" layoutY="227.0" text="Campo obligatorio" textFill="RED" />
+                                          <Label fx:id="errorLabel1" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="13.0" layoutY="96.0" prefHeight="17.0" prefWidth="263.0" text="Error" textAlignment="RIGHT" textFill="RED" />
+                                          <Label fx:id="errorLabel2" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="13.0" layoutY="160.0" prefHeight="17.0" prefWidth="263.0" text="Error" textAlignment="RIGHT" textFill="RED" />
+                                          <Label fx:id="errorLabel3" alignment="CENTER_RIGHT" layoutX="13.0" layoutY="226.0" prefHeight="17.0" prefWidth="263.0" text="Error" textAlignment="RIGHT" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -344,10 +344,13 @@
                                           <TextField fx:id="tfIdClienteRB" layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="124.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="15.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="15.0" />
                                           <Label layoutX="98.0" layoutY="14.0" text="Gastos del cliente" />
-                                          <Label layoutX="15.0" layoutY="108.0" text="Mes" />
-                                          <Label layoutX="15.0" layoutY="165.0" text="Año" />
-                                          <TextField fx:id="tfAnio" layoutX="12.0" layoutY="182.0" prefHeight="25.0" prefWidth="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                          <ChoiceBox fx:id="cbMes" layoutX="11.0" layoutY="125.0" prefHeight="25.0" prefWidth="127.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label layoutX="16.0" layoutY="113.0" text="Mes" />
+                                          <Label layoutX="17.0" layoutY="172.0" text="Año" />
+                                          <TextField fx:id="tfAnio" layoutX="10.0" layoutY="189.0" prefHeight="25.0" prefWidth="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <ChoiceBox fx:id="cbMes" layoutX="10.0" layoutY="130.0" prefHeight="25.0" prefWidth="127.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label fx:id="errorLabel4" alignment="CENTER_RIGHT" layoutX="16.0" layoutY="96.0" prefHeight="17.0" prefWidth="260.0" text="Error" textAlignment="RIGHT" textFill="RED" />
+                                          <Label fx:id="errorLabel5" alignment="CENTER_RIGHT" layoutX="14.0" layoutY="155.0" prefHeight="17.0" prefWidth="262.0" text="Error" textAlignment="RIGHT" textFill="RED" />
+                                          <Label fx:id="errorLabel6" alignment="CENTER_RIGHT" layoutX="15.0" layoutY="214.0" prefHeight="17.0" prefWidth="261.0" text="Error" textAlignment="RIGHT" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -359,6 +362,7 @@
                                           <TextField fx:id="tfIdClienteRC" layoutX="10.0" layoutY="71.0" prefHeight="25.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                           <Label layoutX="10.0" layoutY="54.0" text="ID del cliente" AnchorPane.leftAnchor="10.0" />
                                           <Label layoutX="96.0" layoutY="14.0" text="Tarjetas del cliente" />
+                                          <Label fx:id="errorLabel7" alignment="CENTER_RIGHT" layoutX="16.0" layoutY="96.0" prefHeight="17.0" prefWidth="260.0" text="Error" textAlignment="RIGHT" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -370,6 +374,7 @@
                                           <Label layoutX="10.0" layoutY="54.0" text="Facilitador" AnchorPane.leftAnchor="10.0" />
                                           <Label layoutX="85.0" layoutY="14.0" text="Clientes por facilitador" />
                                           <ComboBox fx:id="cmbFacilitador" layoutX="10.0" layoutY="71.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                          <Label fx:id="errorLabel8" alignment="CENTER_RIGHT" layoutX="12.0" layoutY="96.0" prefHeight="17.0" prefWidth="268.0" text="Error" textAlignment="RIGHT" textFill="RED" />
                                        </children>
                                     </AnchorPane>
                                  </content>
