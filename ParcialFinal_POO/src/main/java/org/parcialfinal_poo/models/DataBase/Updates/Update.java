@@ -48,6 +48,7 @@ public class Update extends DataBaseUpdate {
             alerta.setHeaderText(affectedRows > 0 ? "Datos de cliente actualizados exitosamente"
                     : "Actualizacion de datos de cliente fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -56,7 +57,7 @@ public class Update extends DataBaseUpdate {
     }
 
     @Override
-    public void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int id) {
+    public void updateTarjeta(String numTarjeta, Date fechaExp, TipoTarjeta tipo, Facilitador facilitador, int clienteID, int id) {
         //00021223 se define metodo abstracto para ejecutar la consulta para actualizar registros en la tabla tarjeta en la bbdd
         //recibe los campos que se requieren actualizar en un registro y el ID del registro que se desea actualizar
 
@@ -79,7 +80,8 @@ public class Update extends DataBaseUpdate {
                 preparedStatement.setInt(4, 3); //00021223 cuarto valor (nuevo ID de facilitador)
             }
 
-            preparedStatement.setInt(5, id); //00021223 ID de la tarjeta de la cual se quiere actualizar sus datos
+            preparedStatement.setInt(5, clienteID);
+            preparedStatement.setInt(6, id); //00021223 ID de la tarjeta de la cual se quiere actualizar sus datos
 
             int affectedRows = preparedStatement.executeUpdate(); //00021223 se ejecuta la query y se guarda el valor de retorno
             //en una variable de tipo entero, retorna el numero de campos afectados
@@ -89,6 +91,8 @@ public class Update extends DataBaseUpdate {
             alerta.setHeaderText(affectedRows > 0 ? "Datos de tarjeta actualizados exitosamente"
                     : "Actualizacion de datos de tarjeta fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
+
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -122,6 +126,7 @@ public class Update extends DataBaseUpdate {
             alerta.setHeaderText(affectedRows > 0 ? "Datos de compra actualizados exitosamente"
                     : "Actualizacion de datos de compra fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta

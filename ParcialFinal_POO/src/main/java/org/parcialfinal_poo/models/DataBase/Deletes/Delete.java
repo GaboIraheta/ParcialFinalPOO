@@ -41,6 +41,7 @@ public class Delete extends DataBaseDelete {
             alerta.setHeaderText(affectedRows > 0 ? "Registro de cliente eliminado exitosamente"
                     : "Eliminacion de registro de cliente fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -70,6 +71,7 @@ public class Delete extends DataBaseDelete {
             alerta.setHeaderText(affectedRows > 0 ? "Registro de tarjeta eliminado exitosamente"
                     : "Eliminacion de registro de tarjeta fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -99,6 +101,7 @@ public class Delete extends DataBaseDelete {
             alerta.setHeaderText(affectedRows > 0 ? "Registro de compra eliminado exitosamente"
                     : "Eliminacion de compra de tarjeta fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException ex) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta

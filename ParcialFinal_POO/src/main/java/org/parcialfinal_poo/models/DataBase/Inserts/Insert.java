@@ -2,10 +2,10 @@ package org.parcialfinal_poo.models.DataBase.Inserts;
 
 import javafx.scene.control.Alert;
 import org.parcialfinal_poo.models.Banco.Cliente;
-import org.parcialfinal_poo.models.Banco.Control.Control;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Facilitador;
 import org.parcialfinal_poo.models.Banco.Tarjetas.Tarjeta;
 import org.parcialfinal_poo.models.Banco.Tarjetas.TipoTarjeta;
+import org.parcialfinal_poo.models.DataBase.Selects.Select;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -30,7 +30,7 @@ public class Insert extends DataBaseInserts {
         //00021223 se define metodo abstracto que se encarga de registrar a un cliente en la base de datos, recibe todos los campos necesarios
         //que debe guardar la tabla de Cliente en la bbdd
 
-        int lastID = Control.getInstance().getClientes().getLast().getId(); //00021223 se obtiene el ID del ultimo registro de cliente almacenado
+        int lastID = Select.getInstance().selectCliente().getLast().getId(); //00021223 se obtiene el ID del ultimo registro de cliente almacenado
 
         try { //00021223 se realiza el control de excepciones requerido para consultas a bases de datos
 
@@ -54,6 +54,7 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Cliente registrado exitosamente"
                     : "Registro de cliente fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //0021223 se inserta el texto para el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException e) { //00021223 control de excepciones, cacha un SQLException que seria cualquier fallo en la ejecucion de la consulta
             //todo se debe mandar el mensaje de error por medio de una alerta
@@ -67,7 +68,7 @@ public class Insert extends DataBaseInserts {
         //00021223 se define metodo abstracto pare registrar una tarjeta en la base de datos, recibe todos los campos necesarios que
         //debe guardar la tabla Tarjeta en la bbdd
 
-        int lastID = Control.getInstance().getClientes().get(clienteID).getTarjetas().getLast().getId(); //00021223 se obtiene el ID del ultimo registro
+        int lastID = Select.getInstance().selectTarjeta().getLast().getId(); //00021223 se obtiene el ID del ultimo registro
         //de tarjeta almacenado en la lista de tarjetas del cliente con ID = clienteID
 
         try { //00021223 control de excepciones requerido para realizar consultas a bbdd
@@ -98,6 +99,7 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Tarjeta registrada exitosamente"
                     : "Registro de tarjeta fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //00021223 se insertan el numero de campos afectados en el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException e) { //00021223 control de excepciones para atrapar cualquier excepcion referente a las consultas
             //todo se debe agregar una alerta
@@ -110,16 +112,7 @@ public class Insert extends DataBaseInserts {
         //00021223 se define metodo abstracto para registrar una compra en la base de datos, recibe todos los campos necesarios
         //que debe guardar la tabla Compra en la bbdd
 
-        int lastID = 0; //00021223 se inicializa una variable para guardar el ID del ultimo registro de compra de la tarjeta con ID = tarjetaID
-
-        for(Cliente cliente : Control.getInstance().getClientes()) { //00021223 primero se recorrer la lista de clientes
-            for(Tarjeta tarjeta : cliente.getTarjetas()) { //00021223 por cada cliente, se recorre su lista de tarjetas
-                if(tarjeta.getId() == tarjetaID) { //00021223 se valida si alguna tarjeta del cliente coincide en su ID con tarjetaID
-                    lastID = tarjeta.getCompras().getLast().getCodigo(); //00021223 si hay una coincidencia accede a la lista de compras de la tarjeta
-                    //actual, accede al ultimo registro de compra de la tarjeta en la lista y obtiene su codigo el cual se guarda en lastID
-                }
-            }
-        }
+        int lastID = Select.getInstance().selectCompra().getLast().getCodigo(); //00021223 se inicializa una variable para guardar el ID del ultimo registro de compra de la tarjeta con ID = tarjetaID
 
         try { //00021223 control de excepciones requerido para realizar consultas a bbdd
 
@@ -141,6 +134,7 @@ public class Insert extends DataBaseInserts {
             alerta.setHeaderText(affectedRows > 0 ? "Compra registrada exitosamente"
                     : "Registro de compra fallido"); //00021223 se inserta la informacion de la ejecucion de la consulta en el cuerpo de la alerta
             alerta.setContentText(affectedRows + "campos afectados"); //00021223 se insertan el numero de campos afectados en el contenido de la alerta
+            alerta.showAndWait(); //00021223 muestra la alerta
 
         } catch (SQLException e) { //00021223 control de excepciones para atrapar cualquier excepcion referente a las consultas
             //todo se debe agregar una alerta

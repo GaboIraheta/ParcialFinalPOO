@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.parcialfinal_poo.models.Banco.Control.Control;
 
 import java.io.IOException;
 
@@ -16,8 +15,6 @@ public class BancoApplication extends Application {
         stage.setTitle("Sistema de registros"); //00042823 Establece el nombre de la ventana
         stage.setScene(scene); //00042823 Establece la configuración de la escena en una ventana
         stage.show(); //00042823 Muestra la ventana seleccionada
-
-        Control.getInstance().loadClientes();
     }
 
     public static void main(String[] args) {
